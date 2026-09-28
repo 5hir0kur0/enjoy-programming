@@ -13,7 +13,7 @@ title: <feature>
 status: draft            # draft | approved | in-progress | done
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-tests: <user | ping-pong | per-task>
+tests: ping-pong         # ping-pong | user | per-task
 research: []            # research files, if the user asked for any
 ---
 
@@ -81,10 +81,11 @@ One to three sentences: what, why, and how we know it's done.
   `updated` in the frontmatter as you go. Set `status: approved` only
   after the user approved the plan, `in-progress` when the first task
   starts, and `done` when the last one is ticked.
-- **Look ahead only as far as is reasonable.** At least the next two
-  tasks are fully briefed, so the user can keep working without you (out
-  of tokens, offline, during an outage). Later tasks are outlines (marked
-  `outline`): a title, an owner, a goal, and what they wait on. They name
-  the decisions still to be made instead of guessing them. Brief an
-  outline once it moves up, and adjust it to what earlier tasks actually
-  decided.
+- **Brief two ahead, outline the rest.** Aim to keep the next two tasks
+  fully briefed, so the user can keep working without you (out of tokens,
+  offline, during an outage). A task that depends on an open question or
+  on how an earlier task turns out stays an outline until that's settled.
+  Outlines (marked `outline`) have a title, an owner, a goal, and what
+  they wait on. They name the decisions still to be made instead of
+  guessing them. Brief an outline once it moves up, and adjust it to what
+  earlier tasks actually decided.

@@ -1,9 +1,15 @@
 # Review cycle
 
-Every artifact, whether a plan, your code or the user's code, gets reviewed
-until the review is **clean**: no critical or important findings left open,
-except ones the user explicitly accepted. Then it's fit for the user's
-eyes, or done.
+Reviews repeat until they're **clean**: no critical or important findings
+left open. There are two kinds:
+
+- **Plan review** runs on a new plan, or on a brief that changed beyond
+  line numbers, before the user sees it. You fix every finding yourself.
+  A finding that needs the user's decision becomes an open question or a
+  `(?)` assumption in the plan, so it reaches the user with the plan.
+- **Code review** runs on a finished task after verification, whether
+  you or the user wrote the code. Findings in the user's code go to the
+  user, who may also accept a finding and leave it open.
 
 ## How to run a review
 
@@ -11,29 +17,31 @@ eyes, or done.
   session, give it the matching prompt below plus the inputs. If not,
   review yourself: re-read the inputs from scratch and ignore what you
   remember about the intent.
-- **Inputs for code:** the task text from the plan (or the in-chat brief),
-  the base commit (from the plan's Log), and the test output from the
-  verification step. The diff is `git diff <base>` plus untracked files
-  from `git status`, since the user may not have committed yet.
 - **Inputs for a plan:** the plan file, its research files if any, and
   the goal and decisions as the user stated them.
+- **Inputs for code:** the task text from the plan (or the in-chat brief),
+  the base commit (from the plan's Log, or the chat for small tasks), and
+  the test output from the verification step. The diff is
+  `git diff <base>` plus untracked files from `git status`, since the
+  user may not have committed yet.
 
 ## The loop
 
 1. Run the review.
-2. Critical or important findings: fix them. The user fixes findings in
-   their own code, unless they hand them to you. You fix findings in
-   agent-owned code and in plans.
-3. Minor findings: in agent-owned code and plans, fix the quick, trivial
+2. Critical or important findings: fix them. You fix findings in plans
+   and in agent-owned code. The user fixes findings in their own code,
+   unless they hand them to you.
+3. Minor findings: in plans and agent-owned code, fix the quick, trivial
    ones and log the more involved ones (e.g. a fix that adds many lines)
    in the plan. In the user's code, offer to fix them yourself in one
    batch; if the user declines, log them. Small tasks: leave them in chat.
-4. Re-review the full task diff against the open findings. For each
-   finding, report whether it's addressed, and flag any new breakage.
+4. Re-review against the open findings: the whole plan, or the full task
+   diff. For each finding, report whether it's addressed, and flag any
+   new breakage.
 5. If a finding is still disputed after three rounds, stop looping. Put
    both positions to the user in two lines and let them decide.
 
-Tell the user the result briefly: a verdict and the findings.
+Tell the user the verdict and the findings.
 
 ## Code review prompt
 
@@ -86,9 +94,9 @@ Check:
   decided? Is every assumption marked (?)?
 - Emptiness: in briefed tasks, "TBD", "handle edge cases", no "done
   when", or no test and no stated reason for skipping it (config, glue,
-  no test harness). Tasks marked outline only need a goal and what they
-  wait on; flag an outline that makes a decision, or fewer than the next
-  two tasks briefed.
+  no test framework). Tasks marked outline only need a goal and what they
+  wait on. Flag an outline that makes a decision, and fewer than two
+  tasks briefed ahead when nothing pending blocks the next ones.
 - Ownership: flag design-heavy work marked owner: agent unless a
   decision records the user chose that, and user-owned tasks that contain
   implementation code.
