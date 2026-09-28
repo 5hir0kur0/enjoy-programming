@@ -52,12 +52,13 @@ coding sessions focused and well-prepared, not to replace them.
 ### 1. Understand
 
 - Read the relevant code, docs and recent commits before asking anything.
-- Choose a size and say which one: **small** (one clear change to existing
-  code: brief in chat, no plan file) or **planned** (anything bigger: plan
-  file). The user can override your choice. When in doubt, pick planned.
 - Ask until you can state the goal, the constraints and what "done" looks
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed.
+- Choose a size and say which one: **small** (one clear change to existing
+  code: brief in chat, no plan file; the chat is the only record) or
+  **planned** (anything bigger: plan file). The user can override your
+  choice. When in doubt, pick planned.
 - When there's a real choice, propose 2–3 approaches with trade-offs,
   your recommendation first.
 - If the request is too big, split it into independent pieces and plan the
@@ -89,19 +90,22 @@ their part.
   [references/tdd.md](references/tdd.md)): the user writes them, you write
   the failing test and the user makes it pass (ping-pong), or the user
   chooses per task during the brief. For small tasks with no plan file,
-  let the user choose the TDD mode unless there is a documented preference
-  for this project.
-- Review the plan until the reviewer finds nothing, then show it to the
-  user. Wait for approval.
+  let the user choose the TDD mode unless AGENTS.md or CLAUDE.md states a
+  preference.
+- Review the plan until the review is clean, then show it to the user.
+  Wait for approval.
 - Always keep the next few tasks ready, so the user can keep working
   without you (no tokens, no network, a service outage).
 
 ### 4. The task loop (user-owned task)
 
-1. **Brief.** Say what and why, where to edit (`file:line`), the pitfalls,
-   the test that comes first, and links to the relevant decisions or
-   research. Stop at signatures and pointers, no code bodies. Record the
-   base commit (`git rev-parse HEAD`) so you can review everything since.
+1. **Brief.** If the previous task is finished but not committed, remind
+   the user to commit it first: each finished task gets its own commit,
+   and otherwise its changes end up in this task's review. Then say what
+   and why, where to edit (`file:line`), the pitfalls, the test that comes
+   first, and links to the relevant decisions or research. Stop at
+   signatures and pointers, no code bodies. Record the base commit
+   (`git rev-parse HEAD`) so you can review everything since.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it and confirm it fails for the right reason.
 3. **The user codes.** You navigate: answer questions, look things up, run
@@ -117,9 +121,8 @@ their part.
    fixes them or hands them to you. For minor ones, offer to fix them
    yourself in one batch. Re-review the fixes until the review is clean.
 6. **Book-keep.** Tick the task, note deviations, new decisions and parked
-   findings in the plan, and propose the next task.
-
-The user writes commit messages. You may suggest facts to include.
+   findings in the plan (small tasks: nothing to record), remind the user
+   to commit, and propose the next task.
 
 ### Agent-owned tasks
 
@@ -129,8 +132,11 @@ it's clean: what changed, where, and anything surprising. The user may
 read the diff.
 
 "I'm away, finish this" is fine for the remaining low-risk tasks. Work
-through them with review cycles. When something needs a decision, leave a
-note in the plan and skip it; don't decide it yourself.
+through them with review cycles and commit each task on its own once its
+review is clean. When something needs a decision, leave a note in the
+plan and skip it; don't decide it yourself. When you're done, give a
+short summary of each commit (hash, task, what changed) so the user can
+go through them and reword the messages.
 
 ### Bugs
 
@@ -144,10 +150,13 @@ failed, stop and question the approach with the user.
 
 ## Human communication
 
-Commit messages, PR descriptions and issue comments are communication
-between people, so the user writes them. If you produce detailed output
-(test results, benchmark numbers, a change list), it goes below the
-user's own text in a `<details>` block.
+Commit messages, PR/MR descriptions and issue comments are communication
+between people, so the user writes them (the one exception is "I'm away,
+finish this" above). You may suggest facts to
+mention, but write the text only when asked. If you add detailed output
+(test results, benchmark numbers, a change list) to a PR/MR description
+or issue comment, it goes below the user's own text in a `<details>`
+block.
 
 ## Going in circles
 

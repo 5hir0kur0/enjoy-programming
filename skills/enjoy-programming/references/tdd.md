@@ -11,7 +11,8 @@ right thing.
   The test is the spec for their task, so show it to them and get their
   agreement before they start. Keep it minimal, and don't write helpers
   that already implement part of the logic.
-- **per-task:** you decide per task and say which mode in the brief.
+- **per-task:** the user picks the mode for each task during the brief.
+  Suggest one with a one-line reason.
 
 ## The cycle
 

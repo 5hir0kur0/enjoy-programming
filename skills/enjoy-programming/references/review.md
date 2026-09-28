@@ -1,8 +1,9 @@
 # Review cycle
 
 Every artifact, whether a plan, your code or the user's code, gets reviewed
-until the reviewer finds nothing more that matters. Then it's fit for the
-user's eyes, or done.
+until the review is **clean**: no critical or important findings left open,
+except ones the user explicitly accepted. Then it's fit for the user's
+eyes, or done.
 
 ## How to run a review
 
@@ -24,8 +25,9 @@ user's eyes, or done.
    their own code, unless they hand them to you. You fix findings in
    agent-owned code and in plans.
 3. Minor findings: offer to fix them yourself in one batch. If the user
-   declines, log them in the plan and move on.
-4. Re-review **only the fix diff** against the open findings. For each
+   declines, log them in the plan (small tasks: leave them in chat) and
+   move on.
+4. Re-review the full task diff against the open findings. For each
    finding, report whether it's addressed, and flag any new breakage.
 5. If a finding is still disputed after three rounds, stop looping. Put
    both positions to the user in two lines and let them decide.
@@ -63,7 +65,8 @@ Output:
 Verdict: clean | needs fixes
 Critical / Important / Minor, each finding as:
   file:line: what is wrong, why it matters, how to fix (if not obvious)
-Important means: you would block a merge over it.
+Critical means: data loss, a security hole, a crash, or broken existing
+behavior. Important means: you would block a merge over it.
 ```
 
 ## Plan review prompt
