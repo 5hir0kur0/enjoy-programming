@@ -5,10 +5,11 @@ description: Human-at-the-keyboard pair programming. The user writes the code; t
 
 # Enjoy Programming
 
-The user writes the code; you do the rest.
+The user writes the critical parts of the code; you do the rest.
 
-Why: the user keeps ownership of the code and their skills, and catches a
-bad plan within minutes.
+Why: writing the critical parts themselves keeps the user in touch with
+the codebase, so they notice problems that a review of agent-written code
+would miss.
 
 When you start using this skill, say so in one line ("Using
 enjoy-programming: you write the code, I'll brief and review."), so the
@@ -20,7 +21,8 @@ trivial turns out to need a decision, switch to the skill and say so.
 1. **Don't write production code the user owns.** Edit it only for tasks
    marked `owner: agent` in the plan or explicitly handed to you in chat.
    Reading code, running commands, writing plan files and writing the
-   failing tests the TDD mode assigns to you is always fine.
+   failing tests the TDD mode assigns to you is always fine. Write
+   research files only when the user asks you to research something.
 2. **Don't make crucial decisions. Ask.** Keep questions few and focused.
    Offer 2–3 options with trade-offs where you can, your recommendation
    first with a one-line reason. Include enough context to answer without
@@ -48,14 +50,13 @@ was started but not finished keeps the base commit from its Log line.
 
 - Read the relevant code, docs and recent commits before asking anything.
 - When you look things up, link every source you rely on and mark what
-  you couldn't verify. See Research section below for explicit research
-  tasks.
+  you couldn't verify.
 - Ask until you can state the goal, the constraints and what "done" looks
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed. The write-back also names, so the user
   can change them:
   - The size: **small** (one clear change to existing code: brief in
-    chat, no plan file) or **planned** (anything bigger: plan file). When
+    chat in the same format as a plan task, no plan file) or **planned** (anything bigger: plan file). When
     in doubt, pick planned.
   - The TDD mode. It's ping-pong unless AGENTS.md, CLAUDE.md or the user
     says otherwise:
@@ -136,21 +137,18 @@ One to three sentences: what, why, and how we know it's done.
   dependency swaps and low-risk refactorings. The user may hand you any
   task; if it's design-heavy, say so once, then record their choice as a
   decision.
-- **Coupling.** If a task's **Where** grows long because one change
-  ripples through many places, say so: the code may be poorly organised,
-  and reorganising it may deserve a task of its own.
 - **Brief two ahead, outline the rest.** Keep the next two tasks fully
   briefed, so the user can keep working without you. A task that depends
   on an open question, a `(?)` decision or on how an earlier task turns
-  out stays an outline until that's settled. An outline has a title, an
-  owner, a goal, and what it waits on. Brief it once it moves up,
-  adjusted to what earlier tasks actually decided.
-- **Status and Log.** Set `status: approved` only after the user approved
+  out stays an outline (like T3) until that's settled. Brief it once it
+  moves up, adjusted to what earlier tasks actually decided.
+- **Status.** Set `status: approved` only after the user approved
   the plan, `in-progress` when the first task starts, and `done` when the
   last one is ticked. Keep `updated` current.
 
 Review the plan until the review is clean, then show it to the user and
-wait for approval.
+wait for approval. Tasks briefed or changed later need a clean review but
+no approval: point the user to the entry and say what changed.
 
 ### 3. The task loop (user-owned task)
 
@@ -160,15 +158,12 @@ wait for approval.
    - Record the base commit (`git rev-parse HEAD`): as a "started" line in
      the plan's Log, or in chat for small tasks.
    - For **planned** tasks, check the task's entry against the current code
-     and update it (line numbers move, earlier tasks change things). In chat,
-     point to the entry and say only what changed since it was written.
-   - For **small** tasks without a plan, write the task description in the
-     chat, using the same format as in a plan file.
+     and update it (line numbers move, earlier tasks change things).
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
-   ping-pong mode the test is the spec for the user's task, so get their
-   agreement on it before they start.
+   ping-pong mode the test is the spec for the user's task: if it differs
+   from the brief, get their agreement before they start.
    - Test behavior, not every function. Throwaway spikes, generated code,
      pure configuration and trivial glue need no test of their own. Don't
      skip silently: state the reason in the brief, and skip if the user
@@ -190,7 +185,7 @@ wait for approval.
 4. **Verify.** When the user says they're done, run the full test suite
    plus whatever build, lint and typecheck the project uses. Report any
    failures by name, including ones you didn't cause. Failures the task
-   caused go back to the user (task loop step 3) before the review. A
+   caused go back to the user (step 3) before the review. A
    failure that was already there doesn't block it; if you suspect that,
    confirm it at the base commit before saying so.
 5. **Review.** Run the code review (see Review cycle).
@@ -213,18 +208,18 @@ it, as with their own tasks.
 "I'm away, finish this" (or any request to finish the rest of the plan)
 applies only to plans past `draft`; a draft still needs the user's
 approval first. It hands you all remaining tasks, the user-owned ones
-included, and you treat them all as agent-owned. If the working tree 
-has uncommitted changes when you start, commit them first and note that
-in the plan's Log. Brief each outline before you start it. Commit each
+included, and you treat them all as agent-owned. If the working tree
+has uncommitted changes, don't start: ask the user to commit or stash
+them first. Brief each outline before you start it. Commit each
 task once its review is clean.
 
 Don't stop to ask: wherever this skill says to ask or show the user
 something, leave a note in the plan and carry on; a decision you make
 this way goes in as a `(?)` decision. If a task can't continue without a
 crucial decision, or its review is stuck, skip it and every task that
-depends on it. When you're done, give a short summary of
-each commit (hash, task, what changed) so the user can go through them
-and reword the messages.
+depends on it, whether the plan says so or not. When you're done, give a
+short summary of each commit (hash, task, what changed) so the user can
+go through them and reword the messages.
 
 ### Bugs
 
@@ -249,10 +244,9 @@ way):
 
 ## Review cycle
 
-Reviews repeat until they're **clean**: every finding has been handled
-as "Handle the findings" in the loop below says. A **plan review** runs
-on a plan, and on any new or changed task entry (line-number updates
-excepted), before the user sees it; in-chat briefs for small tasks skip
+Reviews repeat until they're **clean**: every finding is handled (step
+2 below). A **plan review** runs on a plan and on any new or changed task
+entry (line-number updates excepted); in-chat briefs for small tasks skip
 it. A **code review** runs after verification.
 
 - **Fresh eyes.** If your environment can start a subagent or a separate
@@ -276,10 +270,9 @@ The loop:
    - **The user's code:** the user fixes critical and important findings,
      unless they hand them to you or accept them as they are (log those).
      Offer to fix the minor ones yourself in one batch; log the ones the
-     user declines. For small tasks (without a plan file), the chat is the log.
-3. **Re-review** against the open findings: the whole plan, or the full
-   task diff. For each finding, report whether it's addressed, and flag any
-   new breakage.
+     user declines. Logging only applies to planned tasks.
+3. **Re-review** the whole plan or the full task diff, passing the open
+   findings as the reviewer prompt's previous findings.
 4. If the loop stops converging, you're stuck (see Communication).
 
 On the user's code, you're reviewing a peer's work. Be direct and
@@ -299,10 +292,9 @@ Stop at the first rung that holds:
 5. Does an installed dependency solve it? Don't add a new one for a few lines.
 6. Only then: the minimum code that works.
 
-Don't add interfaces with a single implementation, config for values that
-never change, or scaffolding "for later". If the same change repeats in
-many places, ask whether an abstraction would remove the repetition.
-Never simplify away validation at trust boundaries, error handling that
+If one change has to be repeated in many places, say so: an abstraction
+or reorganising the code may remove the repetition, possibly as a task of
+its own. Never simplify away validation at trust boundaries, error handling that
 prevents data loss, security, or anything the user asked for.
 
 ## Communication
@@ -340,6 +332,7 @@ Task: <task text or path to plan + task id>
 Diff: `git diff <base>` plus untracked files listed by `git status`,
       excluding the plan file
 Test output: <verification output or path>
+Previous findings: <findings from the last round, or "none">
 
 Check:
 - Spec: anything missing, anything extra that wasn't requested, anything
@@ -359,6 +352,7 @@ Don't praise. "No findings" is a valid and welcome answer.
 
 Output:
 Verdict: clean | needs fixes
+Each previous finding: addressed | not addressed
 Critical / Important / Minor, each finding as:
   file:line: what is wrong, why it matters, how to fix (if not obvious)
 Critical means: data loss, a security hole, a crash, or broken existing
@@ -373,6 +367,7 @@ You are reviewing an implementation plan before a human reads it.
 Read-only.
 
 Plan: <path>   Stated goal/decisions: <text or path>
+Previous findings: <findings from the last round, or "none">
 
 Check:
 - Coverage: does every part of the goal have a task? Is anything planned
@@ -400,6 +395,7 @@ and welcome answer.
 
 Output:
 Verdict: clean | needs fixes
+Each previous finding: addressed | not addressed
 Critical / Important / Minor, each finding as:
   <task or section>: problem → suggested fix
 Critical means: following the plan as written would fail or build the
