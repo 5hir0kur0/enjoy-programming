@@ -140,6 +140,9 @@ One to three sentences: what, why, and how we know it's done.
   dependency swaps and low-risk refactorings. The user may hand you any
   task; if it's design-heavy, say so once, then record their choice as a
   decision.
+- **Coupling.** If a task's **Where** grows long because one change
+  ripples through many places, say so: the code may be poorly organised,
+  and reorganising it may deserve a task of its own.
 - **Brief two ahead, outline the rest.** Keep the next two tasks fully
   briefed, so the user can keep working without you. A task that depends
   on an open question, a `(?)` decision or on how an earlier task turns
@@ -231,6 +234,22 @@ errors fully, and trace the bad value back to where it comes from. Brief
 the user with the evidence and the cause. The fix then goes through the
 normal task loop, whose Red step pins the bug with a failing test.
 
+### Research
+
+When the user asks you to research something (not for lookups along the
+way):
+
+- Before you start, list the questions you'll answer and where you'll
+  look, so the user can research in parallel.
+- Write the results to a file: for each question, the answer, the sources
+  behind it, and what you couldn't verify or where sources disagree.
+  Every claim links its source. Before handing it over, re-check each
+  claim against its source with fresh eyes (see Review cycle).
+- Research findings *feed* decisions; they aren't decisions.
+- When a later proposal rests on the research, name the finding and
+  its source. If the user questions it, re-read the source before defending
+  the proposal.
+
 ## Review cycle
 
 Reviews repeat until they're **clean**: every finding has been fixed or
@@ -304,7 +323,8 @@ options.
 
 ## Files
 
-Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`. Project conventions
+Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`, research notes to
+`docs/research/YYYY-MM-DD-<topic>.md`. Project conventions
 (AGENTS.md, CLAUDE.md, existing directories) and the user's preferences
 win. If unsure, ask once whether plans should be committed.
 
