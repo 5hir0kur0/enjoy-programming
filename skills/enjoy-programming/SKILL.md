@@ -48,10 +48,8 @@ was started but not finished keeps the base commit from its Log line.
 
 - Read the relevant code, docs and recent commits before asking anything.
 - When you look things up, link every source you rely on and mark what
-  you couldn't verify. A finding becomes a decision only once the user
-  confirms it.
-- If the request is too big, split it into independent pieces and plan the
-  first one.
+  you couldn't verify. See Research section below for explicit research
+  tasks.
 - Ask until you can state the goal, the constraints and what "done" looks
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed. The write-back also names, so the user
@@ -130,10 +128,9 @@ One to three sentences: what, why, and how we know it's done.
   cross task boundaries or that the user agreed on. Never write full
   implementations; short pseudo-code is fine where prose would be
   unclear. A plan longer than the code it describes has written the code.
-- **No placeholder lines in briefed tasks.** "TBD", "handle edge
-  cases", "add validation" and "write tests" decide nothing. Replace
-  each one with the concrete decision, or turn it into an open question
-  or a `(?)` decision.
+- **No placeholder lines in briefed tasks.** Phrases like "TBD", "handle
+  edge cases", etc. decide nothing. Replace each one with the concrete
+  decision, or turn it into an open question or a `(?)` decision.
 - **Ownership.** The user owns a task by default. Suggest `owner: agent`
   only for boilerplate, routine edits, cleanup, mechanical repetition,
   dependency swaps and low-risk refactorings. The user may hand you any
@@ -162,11 +159,11 @@ wait for approval.
      first; otherwise its changes end up in this task's review.
    - Record the base commit (`git rev-parse HEAD`): as a "started" line in
      the plan's Log, or in chat for small tasks.
-   - Planned: check the task's entry against the current code and update
-     it (line numbers move, earlier tasks change things). In chat, point
-     to the entry and say only what changed since it was written.
-   - Small: in chat, cover the fields of a plan task entry; the plan
-     rules above apply.
+   - For **planned** tasks, check the task's entry against the current code
+     and update it (line numbers move, earlier tasks change things). In chat,
+     point to the entry and say only what changed since it was written.
+   - For **small** tasks without a plan, write the task description in the
+     chat, using the same format as in a plan file.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
@@ -216,10 +213,10 @@ it, as with their own tasks.
 "I'm away, finish this" (or any request to finish the rest of the plan)
 applies only to plans past `draft`; a draft still needs the user's
 approval first. It hands you all remaining tasks, the user-owned ones
-included, and you treat them all as agent-owned. If the working tree has uncommitted
-changes when you start, commit them first and note that in the plan's
-Log. Brief each outline before you start it. Commit each task once its
-review is clean.
+included, and you treat them all as agent-owned. If the working tree 
+has uncommitted changes when you start, commit them first and note that
+in the plan's Log. Brief each outline before you start it. Commit each
+task once its review is clean.
 
 Don't stop to ask: wherever this skill says to ask or show the user
 something, leave a note in the plan and carry on; a decision you make
@@ -256,8 +253,7 @@ Reviews repeat until they're **clean**: every finding has been handled
 as "Handle the findings" in the loop below says. A **plan review** runs
 on a plan, and on any new or changed task entry (line-number updates
 excepted), before the user sees it; in-chat briefs for small tasks skip
-it. A **code
-review** runs after verification.
+it. A **code review** runs after verification.
 
 - **Fresh eyes.** If your environment can start a subagent or a separate
   session, give it the matching reviewer prompt plus the inputs. If not,
@@ -280,7 +276,7 @@ The loop:
    - **The user's code:** the user fixes critical and important findings,
      unless they hand them to you or accept them as they are (log those).
      Offer to fix the minor ones yourself in one batch; log the ones the
-     user declines. Small tasks: the chat is the log.
+     user declines. For small tasks (without a plan file), the chat is the log.
 3. **Re-review** against the open findings: the whole plan, or the full
    task diff. For each finding, report whether it's addressed, and flag any
    new breakage.
