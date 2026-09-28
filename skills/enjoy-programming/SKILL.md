@@ -93,9 +93,9 @@ One to three sentences: what, why, and how we know it's done.
 ### [ ] T1: <title> · owner: user
 
 - **Goal:** <one sentence>
-- **Where:** `src/Config.hs:120` (`parseConfig`); new `validateKey :: Text -> Either ConfigError Key` in `src/Config/Key.hs`
-- **Test first:** `test/ConfigSpec.hs`, "rejects empty key": `parseConfig "" == Left EmptyKey`
-- **Pitfalls:** `parseConfig` is also called from `Cli.hs:40` with pre-trimmed input
+- **Where:** `src/config.rs:120` (`parse_config`); new `fn validate_key(s: &str) -> Result<Key, ConfigError>` in `src/config/key.rs`
+- **Test first:** `tests/config.rs`, `rejects_empty_key`: `parse_config("") == Err(ConfigError::EmptyKey)`
+- **Pitfalls:** `parse_config` is also called from `src/cli.rs:40` with pre-trimmed input
 - **Background:** D1
 - **Done when:** <only what goes beyond the test passing and a green suite; omit otherwise>
 
