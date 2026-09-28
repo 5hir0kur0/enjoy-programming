@@ -42,24 +42,33 @@ trivial turns out to need a decision, switch to the skill and say so.
 
 ### 0. Resume
 
-Look for a plan that isn't `status: done` and matches the request. If
-none does, start at "1. Understand"; if several do, ask which one. A
-`draft` continues at "2. Plan". Otherwise read its Log and
-Open questions, then continue with the first unticked task. A task that
-was started but not finished keeps the base commit from its Log line.
+Look for a plan that matches the request and is a `draft` or has
+unticked tasks. If none does, start at "1. Understand"; if several do,
+ask which one. A `draft` continues at "2. Plan". Otherwise read its Log
+and Open questions, then continue with the first unticked task. A task
+that was started but not finished keeps the base commit from its Log
+line.
 
 ### 1. Understand
 
 - Read the relevant code, docs and recent commits before asking anything.
 - When you look things up, link every source you rely on and mark what
   you couldn't verify.
+- When the user asks for research (not for lookups along the way), first
+  list the questions you'll answer and where you'll look, so the user can
+  research in parallel. Write the results to a file: for each question,
+  the answer and where sources disagree. Before handing it over, re-check
+  each claim against its source, and re-read the source whenever the
+  user questions a finding.
 - Ask until you can state the goal, the constraints and what "done" looks
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed. The write-back also names, so the user
   can change them:
-  - The size: **small** (one clear change to existing code: brief in
-    chat in the same format as a plan task, no plan file) or **planned**
-    (anything bigger: plan file). When in doubt, pick planned.
+  - The size: **small** (one clear change to existing code) or
+    **planned** (anything bigger). When in doubt, pick planned. A small
+    task runs the same flow without a plan file: the brief (in the same
+    format as a plan task), the base commit and review findings go in
+    chat, and there is no plan review and no book-keeping.
   - The TDD mode. It's ping-pong unless AGENTS.md, CLAUDE.md or the user
     says otherwise:
     - **ping-pong:** you write the failing test and the user makes it pass.
@@ -73,9 +82,7 @@ The plan is the shared state between you and the user.
 ```markdown
 ---
 title: <feature>
-status: draft            # draft | approved | in-progress | done
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+status: draft            # draft | approved
 tdd-mode: ping-pong      # ping-pong | user
 ---
 
@@ -145,9 +152,8 @@ One to three sentences: what, why, and how we know it's done.
   task turns out stays an outline (like T3) until that's settled, even
   if that leaves fewer than two briefed. Brief it once it's unblocked,
   adjusted to what earlier tasks actually decided.
-- **Status.** Set `status: approved` only after the user approved
-  the plan, `in-progress` when the first task starts, and `done` when the
-  last one is ticked. Keep `updated` current.
+- **Status.** Set `status: approved` only after the user approved the
+  plan.
 
 Review the plan (see Review cycle), then show it to the user and wait
 for approval. Tasks briefed or changed later need no approval: point the
@@ -159,10 +165,10 @@ user to the entry and say what changed.
    - If the previous task isn't committed yet (changes to the plan file
      aside), ask the user to commit it first; otherwise its changes end up
      in this task's review.
-   - Record the base commit (`git rev-parse HEAD`): as a "started" line in
-     the plan's Log, or in chat for small tasks.
-   - For **planned** tasks, check the task's entry against the current code
-     and update it (line numbers move, earlier tasks change things).
+   - Record the base commit (`git rev-parse HEAD`) as a "started" line in
+     the plan's Log.
+   - Check the task's plan entry against the current code and update it
+     (line numbers move, earlier tasks change things).
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
@@ -172,9 +178,10 @@ user to the entry and say what changed.
      pure configuration and trivial glue need no test of their own. Don't
      skip silently: state the reason in the brief, and skip if the user
      doesn't object.
-   - One test for one behavior, named after the behavior. Keep it minimal,
-     and don't write helpers that already implement part of the logic.
-   - Test real code; use mocks only when a real dependency can't be used.
+   - Write expected values as literals, not computed by test code that
+     repeats the logic under test: `parse_duration("1h30m") == 5400`, not
+     `== to_seconds(1, 30)` with a helper that redoes the arithmetic.
+     Such a test shares the code's bugs.
    - If it passes right away, either the test is wrong or the behavior
      already exists. Find out which; if it exists, tell the user and
      question the task instead of changing the test.
@@ -193,11 +200,10 @@ user to the entry and say what changed.
    failure that was already there doesn't block it; if you suspect that,
    confirm it at the base commit before saying so.
 5. **Review.** Run the code review (see Review cycle).
-6. **Book-keep** (planned only; small tasks have nothing to record). Tick
-   the task (`### [x] T1`), add a "done" line to the Log, and note
-   deviations, new decisions and parked findings in the plan. Propose the
-   next task and brief ahead; if briefing a task needs new decisions,
-   ask.
+6. **Book-keep.** Tick the task (`### [x] T1`), add a "done" line to the
+   Log, and note deviations, new decisions and parked findings in the
+   plan. Propose the next task and brief ahead; if briefing a task needs
+   new decisions, ask.
 
 ### Agent-owned tasks
 
@@ -210,9 +216,9 @@ it, as with their own tasks.
 ### "I'm away" mode
 
 "I'm away, finish this" (or any request to finish the rest of the plan)
-applies only to plans past `draft`; a draft still needs the user's
-approval first. It hands you all remaining tasks, the user-owned ones
-included, and you treat them all as agent-owned. If the working tree
+applies only to approved plans; a draft still needs the user's approval
+first. It hands you all remaining tasks, the user-owned ones included,
+and you treat them all as agent-owned. If the working tree
 has uncommitted changes other than the plan file, don't start: ask the
 user to commit or stash them first. Brief each outline before you start
 it. Commit each task after its book-keeping.
@@ -232,25 +238,14 @@ errors fully, and trace the bad value back to where it comes from. Brief
 the user with the evidence and the cause. The fix then goes through the
 normal task loop, whose Red step pins the bug with a failing test.
 
-### Research
-
-When the user asks you to research something (not for lookups along the
-way):
-
-- Before you start, list the questions you'll answer and where you'll
-  look, so the user can research in parallel.
-- Write the results to a file: for each question, the answer and where
-  sources disagree. Sourcing works as in 1. Understand. Before handing
-  it over, re-check each claim against its source, and re-read the
-  source again whenever the user questions a finding.
-
 ## Review cycle
 
 Reviews repeat until they're **clean**: the reviewer reports no new
 findings, and every earlier finding is fixed, accepted or logged. A
-**plan review** runs on a plan and on any newly briefed or changed task
-entry. Book-keeping (ticks, Log lines, line numbers) and in-chat briefs
-for small tasks skip it. A **code review** runs after verification.
+**plan review** runs on a new plan, and later whenever the Goal,
+Decisions or Out of scope change, or tasks are added, removed, reordered
+or reassigned. Briefing an outline, updating an entry to match the code
+and book-keeping skip it. A **code review** runs after verification.
 
 **Fresh eyes.** If your environment can start a subagent or a separate
 session, give it the matching reviewer prompt, filled in. If not, review
@@ -260,8 +255,7 @@ about the intent.
 The loop:
 
 1. **Run the review.**
-2. **Handle the findings.** Findings are logged in the plan; for small
-   tasks, mention them in chat instead.
+2. **Handle the findings.** Findings are logged in the plan.
    - **Plan:** fix every finding by changing the plan, minor ones
      included. A finding that needs the user's decision becomes an open
      question or a `(?)` assumption, so it reaches the user with the plan.
@@ -387,10 +381,6 @@ Check:
   no stated reason for skipping it. Tasks marked outline only need a
   title, an owner, a goal and what they wait on. Flag an outline that
   makes a decision.
-- Lookahead: fewer than two tasks briefed ahead when nothing pending
-  blocks the next ones.
-- Ownership: flag design-heavy work marked owner: agent unless a
-  decision records the user chose that.
 - Code: flag full implementations in any task. Short pseudo-code is fine.
 - Simplicity: is there a simpler approach, or unnecessary abstractions or
   dependencies?
@@ -407,6 +397,5 @@ Critical / Important / Minor, each finding as:
 Critical means: following the plan as written would fail or build the
 wrong thing, or it makes a decision the user never made without marking
 it (?). Important means: a task can't be started or finished without
-first settling something, a task breaks the ownership rules, or the plan
-adds work the goal doesn't need. Minor: everything else.
+first settling something, or the plan adds work the goal doesn't need. Minor: everything else.
 ```
