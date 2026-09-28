@@ -13,8 +13,8 @@ title: <feature>
 status: draft            # draft | approved | in-progress | done
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-tests: ping-pong         # user | ping-pong | per-task
-research: [docs/research/<topic>.md]
+tests: <user | ping-pong | per-task>
+research: []            # research files, if the user asked for any
 ---
 
 # <Feature>
@@ -50,6 +50,7 @@ One to three sentences: what, why, and how we know it's done.
 
 ## Log
 
+- YYYY-MM-DD T1 started, base <sha>
 - YYYY-MM-DD T1 done, review clean (1 minor fixed by agent)
 - YYYY-MM-DD T2 parked finding: <one line> (user: fix later)
 ```
@@ -70,7 +71,9 @@ One to three sentences: what, why, and how we know it's done.
   decision, or turn it into an open question.
 - **Unconfirmed assumptions are marked `(?)`** and must be settled before
   the task that depends on them starts.
-- **Tick tasks** (`### [x] T1`) and add a log line when a task finishes.
-  Update `status` and `updated` in the frontmatter as you go.
+- **Log each task's start with its base commit**, tick the task
+  (`### [x] T1`) and add a log line when it finishes. Update `status` and
+  `updated` in the frontmatter as you go. Set `status: approved` only
+  after the user approved the plan.
 - **Stay ahead.** Keep at least the next two or three tasks fully
   briefed, so the user can continue without you.

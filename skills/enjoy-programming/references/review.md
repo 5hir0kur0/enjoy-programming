@@ -12,11 +12,11 @@ eyes, or done.
   review yourself: re-read the inputs from scratch and ignore what you
   remember about the intent.
 - **Inputs for code:** the task text from the plan (or the in-chat brief),
-  the base commit, and the test output from the verification step. The
-  diff is `git diff <base>` plus untracked files from `git status`, since
-  the user may not have committed yet.
-- **Inputs for a plan:** the plan file, its research files, and the goal
-  and decisions as the user stated them.
+  the base commit (from the plan's Log), and the test output from the
+  verification step. The diff is `git diff <base>` plus untracked files
+  from `git status`, since the user may not have committed yet.
+- **Inputs for a plan:** the plan file, its research files if any, and
+  the goal and decisions as the user stated them.
 
 ## The loop
 
@@ -24,7 +24,8 @@ eyes, or done.
 2. Critical or important findings: fix them. The user fixes findings in
    their own code, unless they hand them to you. You fix findings in
    agent-owned code and in plans.
-3. Minor findings: offer to fix them yourself in one batch. If the user
+3. Minor findings: in agent-owned code and plans, fix them. In the
+   user's code, offer to fix them yourself in one batch. If the user
    declines, log them in the plan (small tasks: leave them in chat) and
    move on.
 4. Re-review the full task diff against the open findings. For each
@@ -32,8 +33,7 @@ eyes, or done.
 5. If a finding is still disputed after three rounds, stop looping. Put
    both positions to the user in two lines and let them decide.
 
-Tell the user the result briefly: a verdict and the findings. Don't paste
-the whole review into chat when it's long; write it to a file and link it.
+Tell the user the result briefly: a verdict and the findings.
 
 ## Code review prompt
 
@@ -87,8 +87,9 @@ Check:
 - Emptiness: "TBD", "handle edge cases", a task with no "done when", or
   a task with no test and no stated reason for skipping it (config, glue,
   no test harness).
-- Ownership: flag design-heavy work marked owner: agent, and user-owned
-  tasks that contain implementation code.
+- Ownership: flag design-heavy work marked owner: agent unless a
+  decision records the user chose that, and user-owned tasks that contain
+  implementation code.
 - Simplicity: is there a simpler approach, or unnecessary abstractions or
   dependencies?
 - Research: does a decision rest on a research claim without a source?

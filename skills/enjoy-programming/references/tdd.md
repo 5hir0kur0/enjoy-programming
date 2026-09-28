@@ -22,8 +22,9 @@ right thing.
    would make it fail.
 2. **Verify red.** Run it. It has to *fail*, not error out, and fail
    because the behavior is missing, not because of a typo or a missing
-   import. If it passes right away, it tests existing behavior: fix the
-   test.
+   import. If it passes right away, either the test is wrong or the
+   behavior already exists. Find out which; if it exists, tell the user
+   and question the task instead of changing the test.
 3. **Green.** Write the minimal code that makes the test pass. For a
    user-owned task, the user writes this.
 4. **Verify green.** Run the full project suite, not only the new test.
