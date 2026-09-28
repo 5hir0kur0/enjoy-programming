@@ -24,16 +24,14 @@ trivial turns out to need a decision, switch to the skill and say so.
 2. **Don't make crucial decisions. Ask.** Keep questions few and focused.
    Offer 2–3 options with trade-offs where you can, your recommendation
    first with a one-line reason. Include enough context to answer without
-   digging: if the user doesn't understand the question, you left out
-   context.
-3. **Nothing is done until it has been reviewed.** Plans, your code and
-   the user's code all go through the review cycle before anyone calls
-   them done.
+   digging.
+3. **Nothing is done until it has been reviewed.** Plan files, your code
+   and the user's code all go through the review cycle before anyone
+   calls them done.
 4. **Evidence before claims.** Don't say "passes", "fixed" or "done"
    unless you ran the command in this turn and read its output.
-5. **Keep it short.** The user reads everything you write, and LLM prose
-   is tiring. Durable details go in the plan; chat carries decisions,
-   findings and pointers.
+5. **Keep it short.** The user reads everything you write. Durable
+   details go in the plan; chat carries decisions, findings and pointers.
 6. **Simplest thing that works.** Apply the simplicity ladder to plans,
    briefs and reviews.
 
@@ -42,33 +40,34 @@ trivial turns out to need a decision, switch to the skill and say so.
 ### 0. Resume
 
 Look for a plan that isn't `status: done`. If several match the request,
-ask which one. A `draft` continues at step 2. Otherwise read its Log and
+ask which one. A `draft` continues at "2. Plan". Otherwise read its Log and
 Open questions, then continue with the first unticked task. A task that
 was started but not finished keeps the base commit from its Log line.
 
 ### 1. Understand
 
 - Read the relevant code, docs and recent commits before asking anything.
-- Ask until you can state the goal, the constraints and what "done" looks
-  like. Then write your understanding back, keeping what the user said
-  separate from what you assumed.
-- Choose a size and say which one: **small** (one clear change to existing
-  code: brief in chat, no files) or **planned** (anything bigger: plan file).
-  When in doubt, pick planned.
 - When you look things up, link every source you rely on and mark what
   you couldn't verify. A finding becomes a decision only once the user
   confirms it.
 - If the request is too big, split it into independent pieces and plan the
   first one.
-- Name the TDD mode in your write-back so the user can change it. It's
-  ping-pong unless AGENTS.md, CLAUDE.md or the user says otherwise:
-  - **ping-pong:** you write the failing test and the user makes it pass.
-  - **user:** the user writes the tests and the code; you propose the
-    test cases in the brief.
+- Ask until you can state the goal, the constraints and what "done" looks
+  like. Then write your understanding back, keeping what the user said
+  separate from what you assumed. The write-back also names, so the user
+  can change them:
+  - The size: **small** (one clear change to existing code: brief in
+    chat, no plan file) or **planned** (anything bigger: plan file). When
+    in doubt, pick planned.
+  - The TDD mode. It's ping-pong unless AGENTS.md, CLAUDE.md or the user
+    says otherwise:
+    - **ping-pong:** you write the failing test and the user makes it pass.
+    - **user:** the user writes the tests and the code; you propose the
+      test cases in the brief.
 
 ### 2. Plan (planned size only)
 
-The plan is the shared state between you and the user; keep it current.
+The plan is the shared state between you and the user.
 
 ```markdown
 ---
@@ -168,15 +167,15 @@ wait for approval.
      to the entry and say only what changed since it was written.
    - Small: in chat, cover the fields of a plan task entry; the plan
      rules above apply.
-   - Test behavior, not every function. Throwaway spikes, generated code,
-     pure configuration and trivial glue need no test of their own. Don't
-     skip silently: state the reason in the brief, and skip if the user
-     doesn't object.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
    ping-pong mode the test is the spec for the user's task, so get their
    agreement on it before they start.
+   - Test behavior, not every function. Throwaway spikes, generated code,
+     pure configuration and trivial glue need no test of their own. Don't
+     skip silently: state the reason in the brief, and skip if the user
+     doesn't object.
    - One test for one behavior, named after the behavior. Keep it minimal,
      and don't write helpers that already implement part of the logic.
    - Test real code; use mocks only when a real dependency can't be used.
@@ -194,36 +193,39 @@ wait for approval.
 4. **Verify.** When the user says they're done, run the full test suite
    plus whatever build, lint and typecheck the project uses. Report any
    failures by name, including ones you didn't cause. Failures the task
-   caused go back to the user (step 3) before the review; failures that
-   were already there at the base commit don't block it.
+   caused go back to the user (task loop step 3) before the review. A
+   failure that was already there doesn't block it; if you suspect that,
+   confirm it at the base commit before saying so.
 5. **Review.** Run the code review (see Review cycle).
 6. **Book-keep** (planned only; small tasks have nothing to record). Tick
    the task (`### [x] T1`), add a "done" line to the Log, and note
    deviations, new decisions and parked findings in the plan. Propose the
-   next task and brief ahead as step 2 says; if briefing one needs new
-   decisions, ask.
+   next task and brief ahead as "Brief two ahead" in 2. Plan says; if
+   briefing one needs new decisions, ask.
 
 ### Agent-owned tasks
 
 Run the task loop with you in the user's seat: you write the test and the
 code, regardless of the TDD mode, and stay inside the task. The user
 doesn't approve the test; they see the work only once the review is
-clean: what changed, where, and anything surprising.
+clean: what changed, where, and anything surprising. The user commits
+it, as with their own tasks.
 
 ### "I'm away" mode
 
 "I'm away, finish this" (or any request to finish the rest of the plan)
-applies to approved plans only; a `draft` still needs the user's approval
-first. It hands you all remaining tasks, the user-owned ones included, and
-you treat them all as agent-owned. If the working tree has uncommitted
+applies only to plans past `draft`; a draft still needs the user's
+approval first. It hands you all remaining tasks, the user-owned ones
+included, and you treat them all as agent-owned. If the working tree has uncommitted
 changes when you start, commit them first and note that in the plan's
 Log. Brief each outline before you start it. Commit each task once its
 review is clean.
 
 Don't stop to ask: wherever this skill says to ask or show the user
-something, leave a note in the plan and carry on. If a task can't
-continue without a crucial decision, or its review is stuck, skip it and
-every task that depends on it. When you're done, give a short summary of
+something, leave a note in the plan and carry on; a decision you make
+this way goes in as a `(?)` decision. If a task can't continue without a
+crucial decision, or its review is stuck, skip it and every task that
+depends on it. When you're done, give a short summary of
 each commit (hash, task, what changed) so the user can go through them
 and reword the messages.
 
@@ -241,21 +243,20 @@ way):
 
 - Before you start, list the questions you'll answer and where you'll
   look, so the user can research in parallel.
-- Write the results to a file: for each question, the answer, the sources
-  behind it, and what you couldn't verify or where sources disagree.
-  Every claim links its source. Before handing it over, re-check each
-  claim against its source with fresh eyes (see Review cycle).
-- Research findings *feed* decisions; they aren't decisions.
+- Write the results to a file: for each question, the answer and where
+  sources disagree. Sourcing works as in 1. Understand. Before handing
+  it over, re-check each claim against its source.
 - When a later proposal rests on the research, name the finding and
   its source. If the user questions it, re-read the source before defending
   the proposal.
 
 ## Review cycle
 
-Reviews repeat until they're **clean**: every finding has been fixed or
-logged as step 2 of the loop says. A **plan review** runs on a plan, and
-on any new or changed task entry (line-number updates excepted), before
-the user sees it; in-chat briefs for small tasks skip it. A **code
+Reviews repeat until they're **clean**: every finding has been handled
+as "Handle the findings" in the loop below says. A **plan review** runs
+on a plan, and on any new or changed task entry (line-number updates
+excepted), before the user sees it; in-chat briefs for small tasks skip
+it. A **code
 review** runs after verification.
 
 - **Fresh eyes.** If your environment can start a subagent or a separate
@@ -269,8 +270,8 @@ review** runs after verification.
 
 The loop:
 
-1. Run the review.
-2. Handle the findings:
+1. **Run the review.**
+2. **Handle the findings:**
    - **Plan:** fix every finding by changing the plan, minor ones
      included. A finding that needs the user's decision becomes an open
      question or a `(?)` assumption, so it reaches the user with the plan.
@@ -280,8 +281,8 @@ The loop:
      unless they hand them to you or accept them as they are (log those).
      Offer to fix the minor ones yourself in one batch; log the ones the
      user declines. Small tasks: the chat is the log.
-3. Re-review against the open findings: the whole plan, or the full task
-   diff. For each finding, report whether it's addressed, and flag any
+3. **Re-review** against the open findings: the whole plan, or the full
+   task diff. For each finding, report whether it's addressed, and flag any
    new breakage.
 4. If the loop stops converging, you're stuck (see Communication).
 
