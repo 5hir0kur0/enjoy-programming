@@ -13,7 +13,7 @@ title: <feature>
 status: draft            # draft | approved | in-progress | done
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-tests: ping-pong         # ping-pong | user | per-task
+tests: ping-pong         # ping-pong | user
 research: []            # research files, if the user asked for any
 ---
 
@@ -86,6 +86,5 @@ One to three sentences: what, why, and how we know it's done.
   offline, during an outage). A task that depends on an open question or
   on how an earlier task turns out stays an outline until that's settled.
   Outlines (marked `outline`) have a title, an owner, a goal, and what
-  they wait on. They name the decisions still to be made instead of
-  guessing them. Brief an outline once it moves up, and adjust it to what
+  they wait on. Brief an outline once it moves up, and adjust it to what
   earlier tasks actually decided.

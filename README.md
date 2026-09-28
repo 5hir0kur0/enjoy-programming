@@ -42,7 +42,9 @@ For a single project, link or copy the directory into that project's
 ## Use
 
 Invoke it explicitly (`/enjoy-programming` in Claude Code, Zed, and VS Code),
-or let the agent pick it up from its description. It works best as the
+or let the agent pick it up from its description. The agent says when
+it's using the skill, and does trivial tasks (typos, renames, mechanical
+edits) itself without it. It works best as the
 only process skill that's active. Skills that tell the agent to work
 autonomously (for example Superpowers' `subagent-driven-development`)
 contradict it.

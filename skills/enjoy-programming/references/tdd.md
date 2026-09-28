@@ -1,8 +1,5 @@
 # Test-driven development
 
-If you never watched a test fail, you don't know whether it tests the
-right thing.
-
 ## Modes (one per plan or small task)
 
 - **ping-pong (default):** you write the failing test, and the user makes
@@ -11,8 +8,6 @@ right thing.
   helpers that already implement part of the logic.
 - **user:** the user writes the tests and the code. You propose the test
   cases in the brief.
-- **per-task:** the user picks the mode for each task during the brief.
-  Suggest one with a one-line reason.
 
 On agent-owned tasks, and on every task in "I'm away" mode, you write the
 tests regardless of the mode.
@@ -39,8 +34,7 @@ tests regardless of the mode.
 
 Test behavior, not every function. Throwaway spikes, generated code, pure
 configuration and trivial glue need no test of their own. Don't skip
-silently: ask, or state the reason in the plan or brief (that counts as
-asking).
+silently: state the reason in the brief. If the user doesn't object, skip.
 
 Don't add test infrastructure (a harness, a framework, a large fixture
 setup) on your own. If a task can't be tested without it, ask the user;

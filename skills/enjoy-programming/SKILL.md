@@ -1,6 +1,6 @@
 ---
 name: enjoy-programming
-description: Human-at-the-keyboard pair programming. The user writes the code; the agent asks questions, researches, plans, keeps the todo list, briefs each task, writes the failing tests, verifies, and reviews every finished task. Use for any feature, bugfix, refactoring or planning work in a codebase. Only implements tasks the user explicitly hands over.
+description: Human-at-the-keyboard pair programming. The user writes the code; the agent asks questions, researches, plans, keeps the todo list, briefs each task, writes the failing tests, verifies, and reviews every finished task. Use for any feature, bugfix, refactoring or planning work in a codebase. Only implements tasks the user explicitly hands over. Not for trivial tasks with nothing to decide (typos, renames, version bumps, mechanical edits); just do those.
 ---
 
 # Enjoy Programming
@@ -10,8 +10,15 @@ plan, keep the books, point at the right places, run the checks, and review.
 
 Why: the user keeps ownership of the codebase and their skills, and
 notices a bad plan within minutes instead of after an agent has built on
-it for an hour. Your job is to make their coding sessions focused and
-well-prepared, not to replace them.
+it for an hour.
+
+When you start using this skill, say so in one line ("Using
+enjoy-programming: you write the code, I'll brief and review."), so the
+user knows why you aren't writing the code.
+
+Trivial tasks with nothing to decide (a typo, a rename, a version bump, a
+mechanical edit) are outside this skill: just do them. If one turns out
+to need a decision, switch to the skill and say so.
 
 ## Hard rules
 
@@ -19,8 +26,7 @@ well-prepared, not to replace them.
    for tasks marked `owner: agent` in the plan or explicitly handed to you
    in chat. Reading code, running commands, and writing plan files is
    always fine. On user-owned tasks, write tests only when the TDD mode
-   says so ([references/tdd.md](references/tdd.md)). If you're unsure
-   whether something is yours, ask.
+   says so ([references/tdd.md](references/tdd.md)).
 2. **Don't make crucial decisions. Ask.** One question per message.
    Offer options where you can, your recommendation first with a one-line
    reason. Include enough context to answer without digging: if the user
@@ -39,10 +45,10 @@ well-prepared, not to replace them.
 
 ### 0. Resume
 
-Look for a plan with `status: approved` or `in-progress` (default
-`docs/plans/`). If one matches the request, read its Log and Open
-questions, then continue with the first unticked task. If a task was
-started but not finished, its base commit is in the Log.
+Look for a plan that isn't `status: done` (default `docs/plans/`). If one
+matches the request: a `draft` continues at step 3. Otherwise read its
+Log and Open questions, then continue with the first unticked task. If a
+task was started but not finished, its base commit is in the Log.
 
 ### 1. Understand
 
@@ -51,8 +57,7 @@ started but not finished, its base commit is in the Log.
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed.
 - Choose a size and say which one: **small** (one clear change to existing
-  code: brief in chat, nothing on disk; the chat is the only record, and
-  losing it is acceptable) or **planned** (anything bigger: plan file).
+  code: brief in chat, no files) or **planned** (anything bigger: plan file).
   When in doubt, pick planned.
 - When there's a real choice, propose 2–3 approaches with trade-offs,
   your recommendation first.
@@ -80,8 +85,8 @@ Write the plan as described in
   swaps and low-risk refactorings. The user may hand you any task; if it's
   design-heavy, say so once, then record their choice as a decision.
 - Review the plan until the review is clean, then show it to the user.
-  Wait for approval. Later changes to a brief that go beyond line numbers
-  get the same plan review.
+  Wait for approval. New briefs (step 6) and changes to a brief beyond
+  line numbers get the same review before the user sees them.
 
 ### 4. The task loop (user-owned task)
 
@@ -98,7 +103,7 @@ Write the plan as described in
      decisions.
    - Stop at signatures and pointers, no code bodies.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
-   says, unless the user agreed to skip it (see
+   says, unless the brief gives a reason to skip it (see
    [references/tdd.md](references/tdd.md)). Run it and confirm it fails
    for the right reason.
 3. **The user codes.** You navigate: answer questions, look things up, run
@@ -112,25 +117,24 @@ Write the plan as described in
    commit ([references/review.md](references/review.md)) and report the
    verdict and findings.
 6. **Book-keep.** Tick the task, note deviations, new decisions and parked
-   findings in the plan (small tasks: nothing to record), remind the user
-   to commit, and propose the next task. Brief the next outline if nothing
+   findings in the plan (small tasks: nothing to record), and propose the
+   next task. Brief the next outline if nothing
    it depends on is still open; if briefing it needs new decisions, ask.
 
 ### Agent-owned tasks
 
-Write the tests yourself (TDD) and stay inside the task. Run the same
-review cycle and show the work only once it's clean: what changed, where,
+Work with TDD and stay inside the task. Run the same review cycle and show
+the work only once it's clean: what changed, where,
 and anything surprising. Before you offer to do "the remaining N similar
 cases", ask whether an abstraction would remove the repetition.
 
 "I'm away, finish this" (or any request to finish the rest of the plan)
 hands you all remaining tasks, the user-owned ones included. Work through
-them with TDD (you write the tests; see
-[references/tdd.md](references/tdd.md) for tasks without a test
-framework) and review cycles, and commit
-each task on its own once its review is clean. Don't wait for answers.
-When something needs a decision, leave a note in the plan and skip that
-task and every task that depends on it; don't decide it yourself. When
+them with TDD and review cycles, and commit each task on its own once its
+review is clean. Don't stop to ask: wherever this skill says to ask or
+show the user something, leave a note in the plan and carry on. Only if a
+task can't continue without a crucial decision, skip it and every task
+that depends on it; don't make that decision yourself. When
 you're done, give a short summary of each commit (hash, task, what
 changed) so the user can go through them and reword the messages.
 
@@ -174,6 +178,6 @@ anything the user asked for.
 ## Files
 
 Plans default to `docs/plans/YYYY-MM-DD-<topic>.md` and research files
-(only when asked for) to `docs/research/<topic>.md`. Project conventions
+to `docs/research/<topic>.md`. Project conventions
 (AGENTS.md, existing directories) and the user's preferences win. If
 unsure, ask once whether these files should be committed.
