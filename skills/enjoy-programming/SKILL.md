@@ -33,10 +33,9 @@ trivial turns out to need a decision, switch to the skill and say so.
    calls them done.
 4. **Evidence before claims.** Don't say "passes", "fixed" or "done"
    unless you ran the command in this turn and read its output.
-5. **Keep it short.** The user reads everything you write. Durable
-   details go in the plan; chat carries decisions, findings and pointers.
-6. **Simplest thing that works.** Apply the simplicity ladder to plans,
-   briefs and reviews.
+5. **Keep it short and simple.** The user reads everything you write.
+   Durable details go in the plan; chat carries decisions, findings and
+   pointers. Apply the simplicity ladder to plans, briefs and reviews.
 
 ## Workflow
 
@@ -54,12 +53,6 @@ line.
 - Read the relevant code, docs and recent commits before asking anything.
 - When you look things up, link every source you rely on and mark what
   you couldn't verify.
-- When the user asks for research (not for lookups along the way), first
-  list the questions you'll answer and where you'll look, so the user can
-  research in parallel. Write the results to a file: for each question,
-  the answer and where sources disagree. Before handing it over, re-check
-  each claim against its source, and re-read the source whenever the
-  user questions a finding.
 - Ask until you can state the goal, the constraints and what "done" looks
   like. Then write your understanding back, keeping what the user said
   separate from what you assumed. The write-back also names, so the user
@@ -242,10 +235,10 @@ normal task loop, whose Red step pins the bug with a failing test.
 
 Reviews repeat until they're **clean**: the reviewer reports no new
 findings, and every earlier finding is fixed, accepted or logged. A
-**plan review** runs on a new plan, and later whenever the Goal,
-Decisions or Out of scope change, or tasks are added, removed, reordered
-or reassigned. Briefing an outline, updating an entry to match the code
-and book-keeping skip it. A **code review** runs after verification.
+**plan review** runs on a new plan and whenever its goal, decisions,
+scope or tasks change; briefing an outline, updating an entry to match
+the code and book-keeping don't count. A **code review** runs after
+verification.
 
 **Fresh eyes.** If your environment can start a subagent or a separate
 session, give it the matching reviewer prompt, filled in. If not, review
@@ -255,19 +248,17 @@ about the intent.
 The loop:
 
 1. **Run the review.**
-2. **Handle the findings.** Findings are logged in the plan.
-   - **Plan:** fix every finding by changing the plan, minor ones
-     included. A finding that needs the user's decision becomes an open
-     question or a `(?)` assumption, so it reaches the user with the plan.
-   - **Code you wrote:** fix every finding. Only a minor one whose fix is
-     a big refactoring or addition gets logged instead.
-   - **The user's code:** the user fixes critical and important findings,
-     unless they hand them to you or accept them as they are (log those).
-     Offer to fix the minor ones yourself in one batch; log the ones the
-     user declines.
-3. **Re-review** the whole plan or the full task diff. Pass the unfixed
-   findings as previous findings, and the accepted or logged ones as
-   accepted findings.
+2. **Handle the findings.**
+   - **Plan:** fix every finding in the plan. One that needs the user's
+     decision becomes an open question or a `(?)` decision.
+   - **Code you wrote:** fix every finding.
+   - **The user's code:** the user decides for each finding: fix it, hand
+     it to you, or accept it.
+
+   Log every finding that stays unfixed.
+3. **Re-review** the whole plan or the full task diff. Pass the last
+   round's findings as previous findings, and the logged ones as accepted
+   findings.
 4. If the loop stops converging, you're stuck.
 
 On the user's code, you're reviewing a peer's work. Be direct and
@@ -308,8 +299,7 @@ options.
 
 ## Files
 
-Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`, research notes to
-`docs/research/YYYY-MM-DD-<topic>.md`. Project conventions
+Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`. Project conventions
 (AGENTS.md, CLAUDE.md, existing directories) and the user's preferences
 win. If unsure, ask once whether plans should be committed.
 
