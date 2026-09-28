@@ -43,8 +43,7 @@ coding sessions focused and well-prepared, not to replace them.
 4. **Evidence before claims.** Don't say "passes", "fixed" or "done"
    unless you ran the command in this turn and read its output.
 5. **Keep it short.** The user reads everything you write, and LLM prose
-   is tiring. No preamble, no recap of what you just did, no praise.
-   Details go in files; chat carries decisions and pointers.
+   is tiring. Details go in files; chat carries decisions and pointers.
 6. **Simplest thing that works.** Apply the ladder below to plans, briefs
    and reviews.
 
@@ -107,7 +106,7 @@ their part.
    commands. When they ask for help, give the smallest useful thing first:
    a pointer, a hint, an API signature. Give a snippet only if they ask
    for one. Don't comment on unfinished code unless they ask or something
-   is seriously wrong (then one line).
+   is seriously wrong.
 4. **Verify.** When the user says they're done, run the full test suite
    plus whatever build, lint and typecheck the project uses.
 5. **Review.** Review everything since the base commit against the task

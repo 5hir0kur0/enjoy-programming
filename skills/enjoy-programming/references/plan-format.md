@@ -32,6 +32,7 @@ One to three sentences: what, why, and how we know it's done.
 ## Tasks
 
 ### [ ] T1: <title> · owner: user
+
 - **Goal:** <one sentence>
 - **Where:** `src/Config.hs:120` (`parseConfig`); new `validateKey :: Text -> Either ConfigError Key` in `src/Config/Key.hs`
 - **Test first:** `test/ConfigSpec.hs`, "rejects empty key": `parseConfig "" == Left EmptyKey`
@@ -40,12 +41,15 @@ One to three sentences: what, why, and how we know it's done.
 - **Done when:** the new test passes and the full suite is green
 
 ### [ ] T2: <title> · owner: agent
+
 ...
 
 ## Open questions
+
 - Q1: <question for the user>
 
 ## Log
+
 - YYYY-MM-DD T1 done, review clean (1 minor fixed by agent)
 - YYYY-MM-DD T2 parked finding: <one line> (user: fix later)
 ```
