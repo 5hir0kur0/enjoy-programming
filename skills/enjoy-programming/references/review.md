@@ -84,16 +84,32 @@ Check:
 - Consistency: are names, signatures and files the same across tasks?
 - Hidden decisions: does the plan decide something the user never
   decided? Is every assumption marked (?)?
-- Emptiness: "TBD", "handle edge cases", or a task with no test or no
-  "done when".
-- Ownership: is design-heavy work marked owner: agent? Does a
-  user-owned task contain implementation code?
+- Emptiness: "TBD", "handle edge cases", a task with no "done when", or
+  a task with no test and no stated reason for skipping it (config, glue,
+  no test harness).
+- Ownership: flag design-heavy work marked owner: agent, and user-owned
+  tasks that contain implementation code.
 - Simplicity: is there a simpler approach, or unnecessary abstractions or
   dependencies?
 - Research: does a decision rest on a research claim without a source?
 
-Output: Verdict: clean | needs fixes, then findings as
+Don't flag wording or formatting. Don't praise. "No findings" is a valid
+and welcome answer.
+
+Output:
+Verdict: clean | needs fixes
+Critical / Important / Minor, each finding as:
   <task or section>: problem → suggested fix
+Critical means: following the plan as written would fail or build the
+wrong thing (e.g., a part of the goal is not covered by any task, a task that
+needs something only a later task creates, a contradiction with a stated
+decision, or a decision the user never made and that isn't marked `(?)`).
+Important means: a task can't be started or finished without first
+settling something (e.g., inconsistent names or signatures, an empty or
+untestable task, unknown facts), a
+task breaks the ownership rules above, or the plan adds work the goal
+doesn't need.
+Minor: everything else.
 ```
 
 ## Reviewing the user's code
