@@ -119,7 +119,7 @@ One to three sentences: what, why, and how we know it's done.
 
 - YYYY-MM-DD T1 started, base <sha>
 - YYYY-MM-DD T1 done, review clean (1 minor fixed by agent)
-- YYYY-MM-DD T2 parked finding: <one line> (user: fix later)
+- YYYY-MM-DD T2 accepted finding: <one line> (user: fix later)
 ```
 
 - **Order matters.** A task uses only what earlier tasks or existing code
@@ -194,7 +194,7 @@ user to the entry and say what changed.
    confirm it at the base commit before saying so.
 5. **Review.** Run the code review (see Review cycle).
 6. **Book-keep.** Tick the task (`### [x] T1`), add a "done" line to the
-   Log, and note deviations, new decisions and parked findings in the
+   Log, and note deviations, new decisions and accepted findings in the
    plan. Propose the next task and brief ahead; if briefing a task needs
    new decisions, ask.
 
@@ -234,7 +234,7 @@ normal task loop, whose Red step pins the bug with a failing test.
 ## Review cycle
 
 Reviews repeat until they're **clean**: the reviewer reports no new
-findings, and every earlier finding is fixed, accepted or logged. A
+findings, and every earlier finding is fixed or accepted. A
 **plan review** runs on a new plan and whenever its goal, decisions,
 scope or tasks change; briefing an outline, updating an entry to match
 the code and book-keeping don't count. A **code review** runs after
@@ -255,9 +255,9 @@ The loop:
    - **The user's code:** the user decides for each finding: fix it, hand
      it to you, or accept it.
 
-   Log every finding that stays unfixed.
+   A finding that stays unfixed is accepted; log it.
 3. **Re-review** the whole plan or the full task diff. Pass the last
-   round's findings as previous findings, and the logged ones as accepted
+   round's findings as previous findings, and the accepted ones as accepted
    findings.
 4. If the loop stops converging, you're stuck.
 
@@ -319,7 +319,7 @@ Diff: `git diff <base>` plus untracked files listed by `git status`,
       excluding the plan file
 Test output: <verification output or path>
 Previous findings: <findings from the last round, or "none">
-Accepted findings: <findings the user accepted or parked, or "none">;
+Accepted findings: <findings accepted in earlier rounds, or "none">;
       don't report these again
 
 Check:
@@ -356,7 +356,7 @@ Read-only.
 
 Plan: <path>   Stated goal/decisions: <text or path>
 Previous findings: <findings from the last round, or "none">
-Accepted findings: <findings the user accepted or parked, or "none">;
+Accepted findings: <findings accepted in earlier rounds, or "none">;
       don't report these again
 
 Check:
