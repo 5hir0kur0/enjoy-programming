@@ -87,8 +87,10 @@ their part.
   abstraction would remove the repetition.
 - Ask once per plan how tests get written (see
   [references/tdd.md](references/tdd.md)): the user writes them, you write
-  the failing test and the user makes it pass (ping-pong), or you decide
-  per task.
+  the failing test and the user makes it pass (ping-pong), or the user
+  chooses per task during the brief. For small tasks with no plan file,
+  let the user choose the TDD mode unless there is a documented preference
+  for this project.
 - Review the plan until the reviewer finds nothing, then show it to the
   user. Wait for approval.
 - Always keep the next few tasks ready, so the user can keep working
@@ -134,7 +136,9 @@ note in the plan and skip it; don't decide it yourself.
 
 Find the root cause before proposing a fix: reproduce the bug, read the
 errors fully, and trace the bad value back to where it comes from. Pin the
-bug with a failing test. Brief the user with the evidence and the cause.
+bug with a failing test, written by whoever the agreed TDD mode says. If no
+mode is agreed yet, ask before writing it. Brief the user with the evidence
+and the cause.
 The fix then goes through the normal task loop. If three fixes have
 failed, stop and question the approach with the user.
 
