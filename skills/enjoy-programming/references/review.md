@@ -24,10 +24,10 @@ eyes, or done.
 2. Critical or important findings: fix them. The user fixes findings in
    their own code, unless they hand them to you. You fix findings in
    agent-owned code and in plans.
-3. Minor findings: in agent-owned code and plans, fix them. In the
-   user's code, offer to fix them yourself in one batch. If the user
-   declines, log them in the plan (small tasks: leave them in chat) and
-   move on.
+3. Minor findings: in agent-owned code and plans, fix the quick, trivial
+   ones and log the more involved ones (e.g. a fix that adds many lines)
+   in the plan. In the user's code, offer to fix them yourself in one
+   batch; if the user declines, log them. Small tasks: leave them in chat.
 4. Re-review the full task diff against the open findings. For each
    finding, report whether it's addressed, and flag any new breakage.
 5. If a finding is still disputed after three rounds, stop looping. Put
@@ -88,7 +88,7 @@ Check:
   when", or no test and no stated reason for skipping it (config, glue,
   no test harness). Tasks marked outline only need a goal and what they
   wait on; flag an outline that makes a decision, or fewer than the next
-  two or three tasks briefed.
+  two tasks briefed.
 - Ownership: flag design-heavy work marked owner: agent unless a
   decision records the user chose that, and user-owned tasks that contain
   implementation code.
@@ -104,14 +104,13 @@ Verdict: clean | needs fixes
 Critical / Important / Minor, each finding as:
   <task or section>: problem → suggested fix
 Critical means: following the plan as written would fail or build the
-wrong thing (e.g., a part of the goal is not covered by any task, a task that
-needs something only a later task creates, a contradiction with a stated
-decision, or a decision the user never made and that isn't marked `(?)`).
-Important means: a task can't be started or finished without first
-settling something (e.g., inconsistent names or signatures, an empty or
-untestable task, unknown facts), a
-task breaks the ownership rules above, or the plan adds work the goal
-doesn't need.
+wrong thing (e.g., a part of the goal is not covered by any task, a task
+that needs something only a later task creates, a contradiction with a
+stated decision, or a decision the user never made and that isn't marked
+`(?)`). Important means: a task can't be started or finished without
+first settling something (e.g., inconsistent names or signatures, an
+empty or untestable task, unknown facts), a task breaks the ownership
+rules above, or the plan adds work the goal doesn't need.
 Minor: everything else.
 ```
 

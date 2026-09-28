@@ -37,7 +37,7 @@ One to three sentences: what, why, and how we know it's done.
 - **Where:** `src/Config.hs:120` (`parseConfig`); new `validateKey :: Text -> Either ConfigError Key` in `src/Config/Key.hs`
 - **Test first:** `test/ConfigSpec.hs`, "rejects empty key": `parseConfig "" == Left EmptyKey`
 - **Pitfalls:** `parseConfig` is also called from `Cli.hs:40` with pre-trimmed input
-- **Background:** D1, research §2
+- **Background:** D1, `docs/research/<topic>.md` §2
 - **Done when:** the new test passes and the full suite is green
 
 ### [ ] T2: <title> · owner: agent
@@ -71,18 +71,20 @@ One to three sentences: what, why, and how we know it's done.
   cross task boundaries or that the user agreed on. Don't write function
   bodies for user-owned tasks. A plan longer than the code it describes
   has written the code.
-- **No empty lines in briefed tasks.** "TBD", "handle edge cases", "add validation" and
-  "write tests" decide nothing. Replace each one with the concrete
-  decision, or turn it into an open question.
+- **No placeholder lines in briefed tasks.** "TBD", "handle edge
+  cases", "add validation" and "write tests" decide nothing. Replace
+  each one with the concrete decision, or turn it into an open question.
 - **Unconfirmed assumptions are marked `(?)`** and must be settled before
   the task that depends on them starts.
 - **Log each task's start with its base commit**, tick the task
   (`### [x] T1`) and add a log line when it finishes. Update `status` and
   `updated` in the frontmatter as you go. Set `status: approved` only
-  after the user approved the plan.
-- **Look ahead only as far as is reasonable.** The next two or three
-  tasks are fully briefed, so the user can continue without you. Later
-  tasks are outlines (marked `outline`): a title, an owner, a goal, and
-  what they wait on. They name the decisions still to be made instead of
-  guessing them. Brief an outline once it moves into the next two or
-  three, and adjust it to what earlier tasks actually decided.
+  after the user approved the plan, `in-progress` when the first task
+  starts, and `done` when the last one is ticked.
+- **Look ahead only as far as is reasonable.** At least the next two
+  tasks are fully briefed, so the user can keep working without you (out
+  of tokens, offline, during an outage). Later tasks are outlines (marked
+  `outline`): a title, an owner, a goal, and what they wait on. They name
+  the decisions still to be made instead of guessing them. Brief an
+  outline once it moves up, and adjust it to what earlier tasks actually
+  decided.

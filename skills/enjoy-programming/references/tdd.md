@@ -3,7 +3,7 @@
 If you never watched a test fail, you don't know whether it tests the
 right thing.
 
-## Modes (agree on one per plan)
+## Modes (agree on one per plan or small task)
 
 - **user:** the user writes the tests and the code. You propose the test
   cases in the brief.
@@ -32,11 +32,6 @@ right thing.
    by name, including ones you didn't cause.
 5. **Refactor.** Only while the tests are green, and without adding
    behavior.
-
-## Bugs
-
-Write a test that reproduces the symptom, and watch it fail. After the
-fix, watch it pass. That test is the regression guard.
 
 ## Exceptions
 
