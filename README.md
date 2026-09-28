@@ -49,5 +49,4 @@ only process skill that's active. Skills that tell the agent to work
 autonomously (for example Superpowers' `subagent-driven-development`)
 contradict it.
 
-Plans go to `docs/plans/` and research notes (only when you ask for them)
-to `docs/research/`, unless the project says otherwise.
+Plans go to `docs/plans/` unless the project says otherwise.

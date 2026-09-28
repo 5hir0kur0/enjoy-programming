@@ -42,7 +42,7 @@ trivial turns out to need a decision, switch to the skill and say so.
 ### 0. Resume
 
 Look for a plan that isn't `status: done`. If several match the request,
-ask which one. A `draft` continues at step 3. Otherwise read its Log and
+ask which one. A `draft` continues at step 2. Otherwise read its Log and
 Open questions, then continue with the first unticked task. A task that
 was started but not finished keeps the base commit from its Log line.
 
@@ -55,6 +55,9 @@ was started but not finished keeps the base commit from its Log line.
 - Choose a size and say which one: **small** (one clear change to existing
   code: brief in chat, no files) or **planned** (anything bigger: plan file).
   When in doubt, pick planned.
+- When you look things up, link every source you rely on and mark what
+  you couldn't verify. A finding becomes a decision only once the user
+  confirms it.
 - If the request is too big, split it into independent pieces and plan the
   first one.
 - Name the TDD mode in your write-back so the user can change it. It's
@@ -63,16 +66,7 @@ was started but not finished keeps the base commit from its Log line.
   - **user:** the user writes the tests and the code; you propose the
     test cases in the brief.
 
-### 2. Research (when needed)
-
-- Give a link for every claim you rely on and mark anything you couldn't
-  verify.
-- Report findings in chat. Write a research file only when the user
-  explicitly asks for one.
-- Research becomes a decision only after the user confirms it. The
-  decision in the plan carries the source link.
-
-### 3. Plan (planned size only)
+### 2. Plan (planned size only)
 
 The plan is the shared state between you and the user; keep it current.
 
@@ -83,7 +77,6 @@ status: draft            # draft | approved | in-progress | done
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tdd-mode: ping-pong      # ping-pong | user (who writes the failing tests)
-research: []             # research files, if the user asked for any
 ---
 
 # <Feature>
@@ -92,7 +85,7 @@ research: []             # research files, if the user asked for any
 One to three sentences: what, why, and how we know it's done.
 
 ## Decisions
-- D1: <decision> — <why> (<source, if it came from research>)
+- D1: <decision> — <why> (<source link, if any>)
 - D2 (?): <assumption not yet confirmed by the user>
 
 ## Out of scope
@@ -106,7 +99,7 @@ One to three sentences: what, why, and how we know it's done.
 - **Where:** `src/Config.hs:120` (`parseConfig`); new `validateKey :: Text -> Either ConfigError Key` in `src/Config/Key.hs`
 - **Test first:** `test/ConfigSpec.hs`, "rejects empty key": `parseConfig "" == Left EmptyKey`
 - **Pitfalls:** `parseConfig` is also called from `Cli.hs:40` with pre-trimmed input
-- **Background:** D1, `docs/research/<topic>.md` §2 (if any)
+- **Background:** D1
 - **Done when:** <only what goes beyond the test passing and a green suite; omit otherwise>
 
 ### [ ] T2: <title> · owner: agent
@@ -160,7 +153,7 @@ One to three sentences: what, why, and how we know it's done.
 Review the plan until the review is clean, then show it to the user and
 wait for approval.
 
-### 4. The task loop (user-owned task)
+### 3. The task loop (user-owned task)
 
 1. **Brief.**
    - If the previous task isn't committed yet, ask the user to commit it
@@ -204,7 +197,7 @@ wait for approval.
 6. **Book-keep** (planned only; small tasks have nothing to record). Tick
    the task (`### [x] T1`), add a "done" line to the Log, and note
    deviations, new decisions and parked findings in the plan. Propose the
-   next task and brief ahead as step 3 says; if briefing one needs new
+   next task and brief ahead as step 2 says; if briefing one needs new
    decisions, ask.
 
 ### Agent-owned tasks
@@ -250,8 +243,8 @@ review** runs after verification.
   session, give it the matching reviewer prompt plus the inputs. If not,
   review yourself: re-read the inputs from scratch and ignore what you
   remember about the intent.
-- **Inputs for a plan:** the plan file, its research files if any, and
-  the goal and decisions as the user stated them.
+- **Inputs for a plan:** the plan file and the goal and decisions as the
+  user stated them.
 - **Inputs for code:** the task text from the plan (or the in-chat brief),
   the base commit, and the test output from the verification step.
 
@@ -311,10 +304,9 @@ options.
 
 ## Files
 
-Plans default to `docs/plans/YYYY-MM-DD-<topic>.md` and research files
-to `docs/research/<topic>.md`. Project conventions (AGENTS.md, CLAUDE.md,
-existing directories) and the user's preferences win. If unsure, ask once
-whether these files should be committed.
+Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`. Project conventions
+(AGENTS.md, CLAUDE.md, existing directories) and the user's preferences
+win. If unsure, ask once whether plans should be committed.
 
 ## Reviewer prompts
 
@@ -363,7 +355,7 @@ everything else.
 You are reviewing an implementation plan before a human reads it.
 Read-only.
 
-Plan: <path>   Research: <paths>   Stated goal/decisions: <text or path>
+Plan: <path>   Stated goal/decisions: <text or path>
 
 Check:
 - Coverage: does every part of the goal have a task? Is anything planned
@@ -384,7 +376,7 @@ Check:
 - Code: flag full implementations in any task. Short pseudo-code is fine.
 - Simplicity: is there a simpler approach, or unnecessary abstractions or
   dependencies?
-- Research: does a decision rest on a research claim without a source?
+- Sources: does a decision rest on an outside claim without a link?
 
 Don't flag wording or formatting. Don't praise. "No findings" is a valid
 and welcome answer.
