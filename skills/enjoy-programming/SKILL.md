@@ -5,9 +5,8 @@ description: Human-at-the-keyboard pair programming. The user writes the code; t
 
 # Enjoy Programming
 
-The user writes the code that needs thought. You write the boilerplate
-they hand you and do everything around the code: questions, plans,
-tests, verification and review.
+The user writes the code that needs thought. You do everything around
+it: questions, plans, tests, verification and review.
 
 Why: writing the critical parts themselves keeps the user in touch with
 the codebase, so they notice problems that a review of agent-written code
@@ -21,19 +20,17 @@ trivial turns out to need a decision, switch to the skill and say so.
 ## Hard rules
 
 1. **Don't write production code the user owns.** Edit it only for tasks
-   marked `owner: agent` in the plan or explicitly handed to you in chat.
+   marked `owner: agent` in the approved plan or explicitly handed to you
+   in chat.
    Reading code, running commands, writing plan files and writing the
    failing tests the TDD mode assigns to you is always fine.
 2. **Don't make crucial decisions. Ask.** Keep questions few and focused.
    Offer 2–3 options with trade-offs where you can, your recommendation
    first with a one-line reason. Include enough context to answer without
    digging.
-3. **Nothing is done until it has been reviewed.** Plan files, your code
-   and the user's code all go through the review cycle before anyone
-   calls them done.
-4. **Evidence before claims.** Don't say "passes", "fixed" or "done"
+3. **Evidence before claims.** Don't say "passes", "fixed" or "done"
    unless you ran the command in this turn and read its output.
-5. **Keep it short and simple.** The user reads everything you write.
+4. **Keep it short and simple.** The user reads everything you write.
    Durable details go in the plan; chat carries decisions, findings and
    pointers. Apply the simplicity ladder to plans, briefs and reviews.
 
@@ -140,17 +137,14 @@ One to three sentences: what, why, and how we know it's done.
   task; if it's design-heavy, say so once, then record their choice as a
   decision.
 - **Brief ahead, outline the rest.** Aim to keep the next two tasks
-  fully briefed, so the user can keep working without you. A task that
-  depends on an open question, a `(?)` decision or on how an earlier
-  task turns out stays an outline (like T3) until that's settled, even
-  if that leaves fewer than two briefed. Brief it once it's unblocked,
-  adjusted to what earlier tasks actually decided.
-- **Status.** Set `status: approved` only after the user approved the
-  plan.
+  briefed, so the user can keep working without you. A task waiting on
+  an open question, a `(?)` decision or an earlier task's outcome stays
+  an outline (like T3) until that's settled.
 
 Review the plan (see Review cycle), then show it to the user and wait
-for approval. Tasks briefed or changed later need no approval: point the
-user to the entry and say what changed.
+for approval; only then set `status: approved`. Tasks briefed or changed
+later need no approval: point the user to the entry and say what
+changed.
 
 ### 3. The task loop (user-owned task)
 
@@ -160,17 +154,17 @@ user to the entry and say what changed.
      in this task's review.
    - Record the base commit (`git rev-parse HEAD`) as a "started" line in
      the plan's Log.
-   - Check the task's plan entry against the current code and update it
-     (line numbers move, earlier tasks change things).
+   - Brief the task if it's still an outline, adjusted to what earlier
+     tasks actually decided. Either way, check its plan entry against the
+     current code and update it (line numbers move, earlier tasks change
+     things).
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
    ping-pong mode the test is the spec for the user's task: if it differs
    from the brief, get their agreement before they start.
-   - Test behavior, not every function. Throwaway spikes, generated code,
-     pure configuration and trivial glue need no test of their own. Don't
-     skip silently: state the reason in the brief, and skip if the user
-     doesn't object.
+   - Trivial glue, pure configuration and throwaway code need no test;
+     say so in the brief rather than skipping silently.
    - Write expected values as literals, not computed by test code that
      repeats the logic under test: `parse_duration("1h30m") == 5400`, not
      `== to_seconds(1, 30)` with a helper that redoes the arithmetic.
@@ -191,7 +185,7 @@ user to the entry and say what changed.
    failures by name, including ones you didn't cause. Failures the task
    caused go back to the user (step 3) before the review. A
    failure that was already there doesn't block it; if you suspect that,
-   confirm it at the base commit before saying so.
+   confirm it at the base commit in a separate worktree before saying so.
 5. **Review.** Run the code review (see Review cycle).
 6. **Book-keep.** Tick the task (`### [x] T1`), add a "done" line to the
    Log, and note deviations, new decisions and accepted findings in the
@@ -209,12 +203,12 @@ it, as with their own tasks.
 ### "I'm away" mode
 
 "I'm away, finish this" (or any request to finish the rest of the plan)
-applies only to approved plans; a draft still needs the user's approval
-first. It hands you all remaining tasks, the user-owned ones included,
-and you treat them all as agent-owned. If the working tree
-has uncommitted changes other than the plan file, don't start: ask the
-user to commit or stash them first. Brief each outline before you start
-it. Commit each task after its book-keeping.
+is meant for when only routine work is left. It applies only to approved
+plans; a draft still needs the user's approval first. It hands you all
+remaining tasks, the user-owned ones included, and you treat them all as
+agent-owned. If the working tree has uncommitted changes other than the
+plan file, don't start; tell the user why. Commit each task after its
+book-keeping.
 
 Don't stop to ask: wherever this skill says to ask or show the user
 something, leave a note in the plan and carry on; a decision you make
@@ -237,8 +231,7 @@ Reviews repeat until they're **clean**: the reviewer reports no new
 findings, and every earlier finding is fixed or accepted. A
 **plan review** runs on a new plan and whenever its goal, decisions,
 scope or tasks change; briefing an outline, updating an entry to match
-the code and book-keeping don't count. A **code review** runs after
-verification.
+the code and book-keeping don't count.
 
 **Fresh eyes.** If your environment can start a subagent or a separate
 session, give it the matching reviewer prompt, filled in. If not, review
@@ -251,15 +244,15 @@ The loop:
 2. **Handle the findings.**
    - **Plan:** fix every finding in the plan. One that needs the user's
      decision becomes an open question or a `(?)` decision.
-   - **Code you wrote:** fix every finding.
+   - **Code you wrote:** fix every finding, except a minor one whose fix
+     is a big refactoring or addition.
    - **The user's code:** the user decides for each finding: fix it, hand
      it to you, or accept it.
 
-   A finding that stays unfixed is accepted; log it.
-3. **Re-review** the whole plan or the full task diff. Pass the last
-   round's findings as previous findings, and the accepted ones as accepted
-   findings.
-4. If the loop stops converging, you're stuck.
+   If you think a finding on the plan or your code is wrong, say why and
+   drop it. A finding that stays unfixed is accepted; log it (in chat for
+   a small task).
+3. **Re-review** the whole plan or the full task diff.
 
 On the user's code, you're reviewing a peer's work. Be direct and
 specific, without flattery or condescension. When the user pushes back,
@@ -354,7 +347,8 @@ everything else.
 You are reviewing an implementation plan before a human reads it.
 Read-only.
 
-Plan: <path>   Stated goal/decisions: <text or path>
+Plan: <path>
+What the user asked for: <the understanding confirmed in step 1>
 Previous findings: <findings from the last round, or "none">
 Accepted findings: <findings accepted in earlier rounds, or "none">;
       don't report these again
