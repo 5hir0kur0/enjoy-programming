@@ -5,9 +5,7 @@ description: Human-at-the-keyboard pair programming. The user writes the code; t
 
 # Enjoy Programming
 
-The user writes the code. You do nearly everything else: ask, research,
-plan, keep the books, point at the right places, write the failing tests,
-run the checks, and review.
+The user writes the code; you do the rest.
 
 Why: the user keeps ownership of the codebase and their skills, and
 notices a bad plan within minutes instead of after an agent has built on
@@ -22,9 +20,9 @@ trivial turns out to need a decision, switch to the skill and say so.
 
 1. **Don't write production code the user owns.** Edit it only for tasks
    marked `owner: agent` in the plan or explicitly handed to you in chat.
-   Reading code, running commands, writing failing tests and writing plan
-   files is always fine.
-2. **Don't make crucial decisions. Ask.** One question per message.
+   Reading code, running commands, writing plan files and writing the
+   failing tests the TDD mode assigns to you is always fine.
+2. **Don't make crucial decisions. Ask.** Keep questions few and focused.
    Offer options where you can, your recommendation first with a one-line
    reason. Include enough context to answer without digging: if the user
    doesn't understand the question, you left out context.
@@ -67,8 +65,6 @@ was started but not finished keeps the base commit from its Log line.
   - **user:** the user writes the tests and the code; you propose the
     test cases in the brief.
 
-  On agent-owned tasks you write the tests regardless of the mode.
-
 ### 2. Research (when needed)
 
 - Give a link for every claim you rely on and mark anything you couldn't
@@ -80,8 +76,7 @@ was started but not finished keeps the base commit from its Log line.
 
 ### 3. Plan (planned size only)
 
-The plan is the shared state between you and the user. It has to survive
-context loss and sessions without you, so keep it current.
+The plan is the shared state between you and the user; keep it current.
 
 ```markdown
 ---
@@ -138,14 +133,13 @@ One to three sentences: what, why, and how we know it's done.
 
 - **Order matters.** A task uses only what earlier tasks or existing code
   provide. Each task leaves the code working and testable.
-- **Size.** One focused sitting per task. Split tasks where a reviewer
-  could reasonably approve one part and reject the other. Fold setup and
-  config into the task that needs them, except test infrastructure
-  (step 4, Red).
+- **Granularity.** One focused sitting per task. Split tasks where a
+  reviewer could reasonably approve one part and reject the other. Fold
+  setup and config into the task that needs them.
 - **Decisions, not code.** Name files, locations, and the signatures that
-  cross task boundaries or that the user agreed on. Don't write function
-  bodies (esp. for user-owned tasks). A plan longer than the code it describes
-  has written the code.
+  cross task boundaries or that the user agreed on. Never write full
+  implementations; short pseudo-code is fine where prose would be
+  unclear. A plan longer than the code it describes has written the code.
 - **No placeholder lines in briefed tasks.** "TBD", "handle edge
   cases", "add validation" and "write tests" decide nothing. Replace
   each one with the concrete decision, or turn it into an open question.
@@ -159,18 +153,17 @@ One to three sentences: what, why, and how we know it's done.
   if it's design-heavy, say so once, then record their choice as a
   decision.
 - **Brief two ahead, outline the rest.** Keep the next two tasks fully
-  briefed, so the user can keep working without you (out of tokens,
-  offline, during an outage). A task that depends on an open question or
-  on how an earlier task turns out stays an outline until that's settled.
-  An outline has a title, an owner, a goal, and what it waits on. Brief it
-  once it moves up, adjusted to what earlier tasks actually decided.
+  briefed, so the user can keep working without you. A task that depends
+  on an open question or on how an earlier task turns out stays an outline
+  until that's settled. An outline has a title, an owner, a goal, and what
+  it waits on. Brief it once it moves up, adjusted to what earlier tasks
+  actually decided.
 - **Status and Log.** Set `status: approved` only after the user approved
   the plan, `in-progress` when the first task starts, and `done` when the
   last one is ticked. Keep `updated` current.
 
 Review the plan until the review is clean, then show it to the user and
-wait for approval. New briefs and changes to a brief beyond line numbers
-get the same review before the user sees them.
+wait for approval.
 
 ### 4. The task loop (user-owned task)
 
@@ -184,7 +177,7 @@ get the same review before the user sees them.
      to the entry and say only what changed since it was written.
    - Small: in chat, say what and why, where to edit (`file:line`), the
      pitfalls, the test that comes first, and the relevant decisions.
-   - Stop at signatures and pointers, no code bodies.
+   - Stop at signatures, pointers and at most short pseudo-code.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
    says. Run it: it has to *fail*, not error out, and fail because the
    behavior is missing, not because of a typo or a missing import. In
@@ -210,18 +203,20 @@ get the same review before the user sees them.
    is seriously wrong.
 4. **Verify.** When the user says they're done, run the full test suite
    plus whatever build, lint and typecheck the project uses. Report any
-   failures by name, including ones you didn't cause.
-5. **Review.** Run the code review on everything since the base commit
-   and report the verdict and findings.
+   failures by name, including ones you didn't cause. Failures the task
+   caused go back to the user (step 3) before the review; failures that
+   were already there at the base commit don't block it.
+5. **Review.** Run the code review (see Review cycle).
 6. **Book-keep.** Tick the task (`### [x] T1`), add a "done" line to the
    Log, and note deviations, new decisions and parked findings in the plan
-   (small tasks: nothing to record). Propose the next task and keep two
-   briefed ahead; if briefing one needs new decisions, ask.
+   (small tasks: nothing to record). Propose the next task and brief ahead
+   as step 3 says; if briefing one needs new decisions, ask.
 
 ### Agent-owned tasks
 
 Run the task loop with you in the user's seat: you write the test and the
-code and stay inside the task. Show the work only once the review is
+code, regardless of the TDD mode, and stay inside the task. The user
+doesn't approve the test; they see the work only once the review is
 clean: what changed, where, and anything surprising.
 
 ### "I'm away" mode
@@ -229,15 +224,15 @@ clean: what changed, where, and anything surprising.
 "I'm away, finish this" (or any request to finish the rest of the plan)
 applies to approved plans only; a `draft` still needs the user's approval
 first. It hands you all remaining tasks, the user-owned ones included, and
-you treat them all as agent-owned. Brief each outline, with its plan
-review, before you start it. Commit each task once its review is clean,
-with a commit message you write.
+you treat them all as agent-owned. If the working tree has uncommitted
+changes when you start, commit them first and note that in the plan's
+Log. Brief each outline, with its plan review, before you start it.
+Commit each task once its review is clean.
 
 Don't stop to ask: wherever this skill says to ask or show the user
 something, leave a note in the plan and carry on. If a task can't
-continue without a crucial decision, skip it and every task that depends
-on it. Don't add test infrastructure either; note what testing the task
-would take. When you're done, give a short summary of each commit (hash,
+continue without a crucial decision, or its review is stuck, skip it and
+every task that depends on it. When you're done, give a short summary of each commit (hash,
 task, what changed) so the user can go through them and reword the
 messages.
 
@@ -252,8 +247,9 @@ normal task loop, whose Red step pins the bug with a failing test.
 
 Reviews repeat until they're **clean**: every critical or important
 finding is fixed, or the user explicitly accepted it and it's logged.
-A **plan review** runs on a plan, or on a new or changed brief in a plan,
-before the user sees it; in-chat briefs for small tasks skip it. A
+A **plan review** runs on a plan, or on a new brief in a plan or a change
+to one beyond line numbers, before the user sees it; in-chat briefs for
+small tasks skip it. A
 **code review** runs on every finished task after verification, whoever
 wrote the code.
 
@@ -266,7 +262,7 @@ wrote the code.
 - **Inputs for code:** the task text from the plan (or the in-chat brief),
   the base commit, and the test output from the verification step. The
   diff is `git diff <base>` plus untracked files from `git status`, since
-  the user may not have committed yet.
+  the user may not have committed yet, minus the plan file.
 
 The loop:
 
@@ -284,9 +280,9 @@ The loop:
 3. Re-review against the open findings: the whole plan, or the full task
    diff. For each finding, report whether it's addressed, and flag any
    new breakage.
-4. If a finding on a plan or on your code is still disputed between you
-   and the reviewer after three rounds, stop looping. Put both positions
-   to the user in two lines and let them decide.
+4. If the loop stops converging on a plan or on your code (the same
+   finding keeps coming back, or fixes keep causing new findings), stop
+   looping and handle it as stuck (see Communication).
 
 On the user's code, you're reviewing a peer's work. Be direct and
 specific, without flattery or condescension. Your findings are
@@ -317,10 +313,11 @@ between people, so the user writes them unless they ask you to ("I'm
 away" mode counts as asking for commit messages). You may suggest facts
 to mention.
 
-If the same question or problem comes back a third time (including a
-third failed fix for a bug), say so. Sum up the open decision in two or
-three lines and suggest the user think it over away from the screen.
-Don't keep generating options.
+If you're stuck (the same question or problem keeps coming back, a bug
+survives repeated fixes, a review won't converge), say so. Sum up the
+open decision or both positions in two or three lines and let the user
+decide, suggesting they think it over away from the screen. Don't keep
+generating options.
 
 ## Files
 
@@ -341,7 +338,8 @@ You are reviewing one finished task. Read-only: do not modify files, the
 index, or branches.
 
 Task: <task text or path to plan + task id>
-Diff: `git diff <base>` plus untracked files listed by `git status`
+Diff: `git diff <base>` plus untracked files listed by `git status`,
+      excluding the plan file
 Test output: <verification output or path>
 
 Check:
@@ -390,8 +388,8 @@ Check:
 - Lookahead: fewer than two tasks briefed ahead when nothing pending
   blocks the next ones.
 - Ownership: flag design-heavy work marked owner: agent unless a
-  decision records the user chose that, and user-owned tasks that contain
-  implementation code.
+  decision records the user chose that.
+- Code: flag full implementations in any task. Short pseudo-code is fine.
 - Simplicity: is there a simpler approach, or unnecessary abstractions or
   dependencies?
 - Research: does a decision rest on a research claim without a source?
