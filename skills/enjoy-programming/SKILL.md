@@ -102,17 +102,23 @@ their part.
   preference.
 - Review the plan until the review is clean, then show it to the user.
   Wait for approval.
-- Always keep the next few tasks ready, so the user can keep working
-  without you (no tokens, no network, a service outage).
+- Brief only the next two or three tasks in full and keep later ones as
+  outlines (see the plan format). The briefed tasks let the user keep
+  working without you (no tokens, no network, a service outage); the
+  outlines stay open to decisions made along the way.
 
 ### 4. The task loop (user-owned task)
 
 1. **Brief.** If the previous task is finished but not committed, remind
    the user to commit it first: each finished task gets its own commit,
-   and otherwise its changes end up in this task's review. Then say what
-   and why, where to edit (`file:line`), the pitfalls, the test that comes
-   first, and links to the relevant decisions or research. Stop at
-   signatures and pointers, no code bodies. Record the base commit
+   and otherwise its changes end up in this task's review. Then check
+   the task's plan entry against the current code and update it (line
+   numbers move, earlier tasks change things). In chat, point to the
+   entry and say only what changed since it was written. Small tasks have
+   no entry: say what and why, where to edit (`file:line`), the pitfalls,
+   the test that comes first, and links to the relevant decisions or
+   research. Either way, stop at signatures and pointers, no code bodies.
+   Record the base commit
    (`git rev-parse HEAD`) in the plan's Log (small tasks: in chat) so you
    can review everything since, even after losing context.
 2. **Red.** Get a failing test in place, written by whoever the TDD mode
@@ -132,7 +138,9 @@ their part.
    Findings in agent-owned code are yours to fix.
 6. **Book-keep.** Tick the task, note deviations, new decisions and parked
    findings in the plan (small tasks: nothing to record), remind the user
-   to commit, and propose the next task.
+   to commit, and propose the next task. Turn the next outline into a
+   full brief so two or three stay ready; if that needs new decisions,
+   ask, and review the new brief like the rest of the plan.
 
 ### Agent-owned tasks
 

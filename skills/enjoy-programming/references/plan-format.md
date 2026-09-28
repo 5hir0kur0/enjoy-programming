@@ -44,6 +44,11 @@ One to three sentences: what, why, and how we know it's done.
 
 ...
 
+### [ ] T3: <title> · owner: user · outline
+
+- **Goal:** <one sentence>
+- **Depends on:** Q1, whatever T2 decides about <thing>
+
 ## Open questions
 
 - Q1: <question for the user>
@@ -66,7 +71,7 @@ One to three sentences: what, why, and how we know it's done.
   cross task boundaries or that the user agreed on. Don't write function
   bodies for user-owned tasks. A plan longer than the code it describes
   has written the code.
-- **No empty lines.** "TBD", "handle edge cases", "add validation" and
+- **No empty lines in briefed tasks.** "TBD", "handle edge cases", "add validation" and
   "write tests" decide nothing. Replace each one with the concrete
   decision, or turn it into an open question.
 - **Unconfirmed assumptions are marked `(?)`** and must be settled before
@@ -75,5 +80,9 @@ One to three sentences: what, why, and how we know it's done.
   (`### [x] T1`) and add a log line when it finishes. Update `status` and
   `updated` in the frontmatter as you go. Set `status: approved` only
   after the user approved the plan.
-- **Stay ahead.** Keep at least the next two or three tasks fully
-  briefed, so the user can continue without you.
+- **Look ahead only as far as is reasonable.** The next two or three
+  tasks are fully briefed, so the user can continue without you. Later
+  tasks are outlines (marked `outline`): a title, an owner, a goal, and
+  what they wait on. They name the decisions still to be made instead of
+  guessing them. Brief an outline once it moves into the next two or
+  three, and adjust it to what earlier tasks actually decided.

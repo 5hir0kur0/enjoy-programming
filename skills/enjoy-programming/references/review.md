@@ -84,9 +84,11 @@ Check:
 - Consistency: are names, signatures and files the same across tasks?
 - Hidden decisions: does the plan decide something the user never
   decided? Is every assumption marked (?)?
-- Emptiness: "TBD", "handle edge cases", a task with no "done when", or
-  a task with no test and no stated reason for skipping it (config, glue,
-  no test harness).
+- Emptiness: in briefed tasks, "TBD", "handle edge cases", no "done
+  when", or no test and no stated reason for skipping it (config, glue,
+  no test harness). Tasks marked outline only need a goal and what they
+  wait on; flag an outline that makes a decision, or fewer than the next
+  two or three tasks briefed.
 - Ownership: flag design-heavy work marked owner: agent unless a
   decision records the user chose that, and user-owned tasks that contain
   implementation code.
