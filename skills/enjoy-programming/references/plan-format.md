@@ -13,7 +13,7 @@ title: <feature>
 status: draft            # draft | approved | in-progress | done
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-tests: ping-pong         # ping-pong | user
+tdd-mode: ping-pong      # ping-pong | user (who writes the failing tests)
 research: []            # research files, if the user asked for any
 ---
 

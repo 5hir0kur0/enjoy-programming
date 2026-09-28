@@ -4,7 +4,8 @@ Reviews repeat until they're **clean**: every critical or important
 finding is fixed, or the user explicitly accepted it and it's logged.
 There are two kinds:
 
-- **Plan review** runs on a plan or brief before the user sees it.
+- **Plan review** runs on a plan, or a new or changed brief in a plan,
+  before the user sees it. In-chat briefs for small tasks skip it.
 - **Code review** runs on a finished task after verification, whether
   you or the user wrote the code.
 
@@ -39,8 +40,10 @@ There are two kinds:
 3. Re-review against the open findings: the whole plan, or the full task
    diff. For each finding, report whether it's addressed, and flag any
    new breakage.
-4. If a finding is still disputed after three rounds, stop looping. Put
-   both positions to the user in two lines and let them decide.
+4. Plans and code you wrote: if a finding is still disputed between you
+   and the reviewer after three rounds, stop looping. Put both positions
+   to the user in two lines and let them decide. On the user's code, the
+   user decides right away (see below).
 
 ## Code review prompt
 
@@ -92,8 +95,8 @@ Check:
 - Hidden decisions: does the plan decide something the user never
   decided? Is every assumption marked (?)?
 - Emptiness: in briefed tasks, "TBD", "handle edge cases", no "done
-  when", or no test and no stated reason for skipping it (config, glue,
-  no test framework). Tasks marked outline only need a goal and what they
+  when", or no test and no stated reason for skipping it.
+  Tasks marked outline only need a goal and what they
   wait on. Flag an outline that makes a decision.
 - Lookahead: fewer than two tasks briefed ahead when nothing pending
   blocks the next ones.

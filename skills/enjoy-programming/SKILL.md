@@ -25,8 +25,7 @@ to need a decision, switch to the skill and say so.
 1. **Don't write production code the user owns.** Edit source files only
    for tasks marked `owner: agent` in the plan or explicitly handed to you
    in chat. Reading code, running commands, and writing plan files is
-   always fine. On user-owned tasks, write tests only when the TDD mode
-   says so ([references/tdd.md](references/tdd.md)).
+   always fine.
 2. **Don't make crucial decisions. Ask.** One question per message.
    Offer options where you can, your recommendation first with a one-line
    reason. Include enough context to answer without digging: if the user
@@ -45,10 +44,11 @@ to need a decision, switch to the skill and say so.
 
 ### 0. Resume
 
-Look for a plan that isn't `status: done` (default `docs/plans/`). If one
-matches the request: a `draft` continues at step 3. Otherwise read its
-Log and Open questions, then continue with the first unticked task. If a
-task was started but not finished, its base commit is in the Log.
+Look for a plan that isn't `status: done` (default `docs/plans/`). If
+several match the request, ask which one. A `draft` continues at step 3.
+Otherwise read its Log and Open questions, then continue with the first
+unticked task. If a task was started but not finished, its base commit
+is in the Log.
 
 ### 1. Understand
 
@@ -63,8 +63,8 @@ task was started but not finished, its base commit is in the Log.
   your recommendation first.
 - If the request is too big, split it into independent pieces and plan the
   first one.
-- The TDD mode is ping-pong unless AGENTS.md, CLAUDE.md or the user says
-  otherwise ([references/tdd.md](references/tdd.md)). Name the mode in
+- The TDD mode (`tdd-mode` in the plan) is ping-pong unless AGENTS.md,
+  CLAUDE.md or the user says otherwise ([references/tdd.md](references/tdd.md)). Name the mode in
   your write-back so the user can change it.
 
 ### 2. Research (when needed)
@@ -72,7 +72,7 @@ task was started but not finished, its base commit is in the Log.
 - Give a link for every claim you rely on and mark anything you couldn't
   verify.
 - Report findings in chat. Write a research file only when the user
-  explicitly asks for one; if unsure, ask.
+  explicitly asks for one.
 - Research becomes a decision only after the user confirms it.
 
 ### 3. Plan (planned size only)
@@ -85,7 +85,7 @@ Write the plan as described in
   swaps and low-risk refactorings. The user may hand you any task; if it's
   design-heavy, say so once, then record their choice as a decision.
 - Review the plan until the review is clean, then show it to the user.
-  Wait for approval. New briefs (step 6) and changes to a brief beyond
+  Wait for approval. New briefs (task loop step 6) and changes to a brief beyond
   line numbers get the same review before the user sees them.
 
 ### 4. The task loop (user-owned task)
@@ -112,31 +112,36 @@ Write the plan as described in
    for one. Don't comment on unfinished code unless they ask or something
    is seriously wrong.
 4. **Verify.** When the user says they're done, run the full test suite
-   plus whatever build, lint and typecheck the project uses.
+   plus whatever build, lint and typecheck the project uses. Report any
+   failures by name, including ones you didn't cause.
 5. **Review.** Run the code review cycle on everything since the base
    commit ([references/review.md](references/review.md)) and report the
    verdict and findings.
 6. **Book-keep.** Tick the task, note deviations, new decisions and parked
    findings in the plan (small tasks: nothing to record), and propose the
-   next task. Brief the next outline if nothing
-   it depends on is still open; if briefing it needs new decisions, ask.
+   next task. Keep two tasks briefed ahead
+   ([references/plan-format.md](references/plan-format.md)); if briefing
+   one needs new decisions, ask.
 
 ### Agent-owned tasks
 
-Work with TDD and stay inside the task. Run the same review cycle and show
-the work only once it's clean: what changed, where,
-and anything surprising. Before you offer to do "the remaining N similar
-cases", ask whether an abstraction would remove the repetition.
+If a task repeats the same change in many places, ask the user before you
+start whether an abstraction would remove the repetition, so the review
+doesn't reject the finished work. Then work with TDD and stay inside the
+task. Run the same review cycle and show the work only once it's clean:
+what changed, where, and anything surprising.
 
 "I'm away, finish this" (or any request to finish the rest of the plan)
-hands you all remaining tasks, the user-owned ones included. Work through
-them with TDD and review cycles, and commit each task on its own once its
-review is clean. Don't stop to ask: wherever this skill says to ask or
-show the user something, leave a note in the plan and carry on. Only if a
-task can't continue without a crucial decision, skip it and every task
-that depends on it; don't make that decision yourself. When
-you're done, give a short summary of each commit (hash, task, what
-changed) so the user can go through them and reword the messages.
+applies to approved plans only; a `draft` still needs the user's approval
+first. It hands you all remaining tasks, the user-owned ones included.
+Treat them all as agent-owned tasks, and commit each one, with a commit
+message you write, once its review is clean. Don't stop to ask:
+wherever this skill says to ask or show the user something, leave a note
+in the plan and carry on. Only if a task can't continue without a crucial
+decision, skip it and every task that depends on it; don't make that
+decision yourself. When you're done, give a short summary of each commit
+(hash, task, what changed) so the user can go through them and reword
+the messages.
 
 ### Bugs
 
@@ -149,9 +154,8 @@ three fixes have failed, stop and question the approach with the user.
 ## Human communication
 
 Commit messages, PR/MR descriptions and issue comments are communication
-between people, so the user writes them unless they ask you to ("I'm
-away, finish this" counts as asking for commit messages). You may suggest
-facts to mention.
+between people, so the user writes them unless they ask you to. You may
+suggest facts to mention.
 
 ## Going in circles
 
