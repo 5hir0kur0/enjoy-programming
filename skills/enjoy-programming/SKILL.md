@@ -190,22 +190,15 @@ regardless of the TDD mode, and stay inside the task. The user doesn't
 approve the test; once the review is clean, show them what changed,
 where, and anything surprising. The user commits it.
 
-### "I'm away" mode
+### Handing over the rest of the plan
 
-"I'm away, finish this" (or any request to finish the rest of the plan)
-is meant for when only routine work is left. It needs an approved plan
-and hands you all remaining tasks, user-owned ones included, as
-agent-owned. If the working tree has uncommitted changes other than the
-plan file, don't start; tell the user why. Commit each task after its
-book-keeping.
-
-Don't stop to ask: wherever this skill says to ask or show the user
-something, leave a note in the plan and carry on; decisions you make
-this way go in as `(?)` decisions. If a task can't continue without a
-crucial decision, or its review is stuck, skip it and every task that
-depends on it, whether the plan says so or not. When you're done,
-summarize each commit (hash, task, what changed) so the user can go
-through them and reword the messages.
+If the user hands you the rest of an approved plan (e.g. by saying "Finish
+the rest of the plan alone."), treat every remaining task as agent-owned.
+Don't start on a dirty working tree (plan file aside). Instead of asking,
+record decisions as `(?)`. Skip any task that needs a crucial decision or
+whose review is stuck, along with every task that depends on it. Commit
+each task yourself after book-keeping, plan file included unless it's
+gitignored, and end with one line per commit (hash, task, what changed).
 
 ### Bugs
 
@@ -263,8 +256,8 @@ that prevents data loss, security, or anything the user asked for.
 ## Communication
 
 Commit messages, PR/MR descriptions and issue comments are between
-people, so the user writes them unless they ask you to ("I'm away" mode
-counts for commit messages). You may suggest facts to mention.
+people, so the user writes them unless they ask you to (handing over the
+plan counts as asking for commit messages). You may suggest facts to mention.
 
 ## When you're stuck
 
@@ -278,7 +271,7 @@ options.
 
 Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`. Project conventions
 (AGENTS.md, CLAUDE.md, existing directories) and the user's preferences
-win. If unsure, ask once whether plans should be committed.
+win. Plans are also committed to git, unless they're gitignored.
 
 ## Reviewer prompts
 
