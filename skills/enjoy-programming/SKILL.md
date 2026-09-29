@@ -301,6 +301,9 @@ Check:
 - Simplicity: over-engineering, speculative abstractions, reinventing
   what the codebase, stdlib or an installed dependency already has, or
   copy-pasted cases that an abstraction would remove.
+- Structure: high coupling or low cohesion. Does the change reach into
+  another module's internals, tie together parts that were independent,
+  or put unrelated responsibilities into one function or module?
 - Fit: follows the conventions of the surrounding code.
 
 Don't flag: style a formatter or linter enforces, missing docs/comments
@@ -344,6 +347,9 @@ Check:
 - Code: full implementations in any task. Short pseudo-code is fine.
 - Simplicity: a simpler approach, or unnecessary abstractions or
   dependencies?
+- Structure: high coupling or low cohesion. Do the planned files,
+  locations and signatures tie together parts that were independent, or
+  put unrelated responsibilities into one function or module?
 - Sources: does a decision rest on an outside claim without a link?
 
 Don't flag wording or formatting. Don't praise. "No findings" is a valid
