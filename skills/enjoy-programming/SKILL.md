@@ -1,6 +1,6 @@
 ---
 name: enjoy-programming
-description: The user writes the code; the agent acts as a supporting pair programmer. Use for any nontrivial feature, bugfix, refactoring or planning work in a codebase. Not for trivial tasks with nothing to decide (typos, renames, version bumps, mechanical edits); just do those.
+description: The user writes the code; the agent acts as a supporting pair programmer. Use for any nontrivial feature, bugfix, refactoring or planning work in a codebase. Not for trivial tasks, meaning no behavior change, no new test needed and no design choice (typos, renames, version bumps, mechanical edits); just do those. If any of these fails, use the skill.
 ---
 
 # Enjoy Programming
@@ -14,8 +14,8 @@ If a task you took for trivial turns out to need a decision, switch to the skill
 
 ## Rules
 
-1. Don't write production code the user owns, unless explicitly requested.
-   Edit it only for tasks marked `owner: agent` in the approved plan or handed to you in chat.
+1. Write production code _only_ in tasks you own: tasks marked `owner: agent` in the approved plan, tasks handed to you in chat, and all remaining tasks after a handover (see "Handing over the rest of the plan").
+   All other production code belongs to the user.
    Reading code, running commands, writing plan files and writing the failing tests the TDD mode assigns you is always fine.
 2. Don't make crucial decisions.
    Ask.
@@ -34,7 +34,7 @@ If a task you took for trivial turns out to need a decision, switch to the skill
 
 Look for a plan that matches the request and is a `draft` or has unticked tasks.
 None: start at "1. Understand".
-Several: ask which.
+Several, or unsure whether one matches: show the candidates and ask.
 A `draft` continues at "2. Plan".
 Otherwise read its Log and Open questions and continue with the first unticked task;
 if it was already started, keep the base commit from its Log line.
@@ -58,20 +58,23 @@ The plan is the shared state between you and the user.
 ```markdown
 ---
 title: <feature>
-status: draft            # draft | approved
-tdd-mode: ping-pong      # ping-pong | user
+status: draft # draft | approved
+tdd-mode: ping-pong # ping-pong | user
 ---
 
 # <Feature>
 
 ## Goal
+
 One to three sentences: what, why, and how we know it's done.
 
 ## Decisions
+
 - D1: <decision> — <why> (<source link, if any>)
 - D2 (?): <assumption not yet confirmed by the user>
 
 ## Out of scope
+
 - <thing we deliberately don't do>
 
 ## Tasks
@@ -138,7 +141,7 @@ Tasks briefed or changed later need no approval: point the user to the entry and
      Either way, check its entry against the current code and update it; line numbers and earlier decisions move.
 2. **Red.**
    Get a failing test in place, written by whoever the TDD mode says.
-   Run it: it has to *fail* because the behavior is missing, not error out from a typo or a missing import.
+   Run it: it has to _fail_ because the behavior is missing, not error out from a typo or a missing import.
    In ping-pong mode the test is the spec for the user's task: if it differs from the brief, get their agreement before they start.
    - Trivial glue, pure configuration and throwaway code need no test; say so in the brief rather than skipping silently.
    - Write expected values as literals, not computed by test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`.
@@ -195,15 +198,16 @@ If not, re-read the inputs from scratch and ignore what you remember about the i
 2. **Handle the findings.**
    - **Plan:** fix every finding.
      One that needs the user's decision becomes an open question or a `(?)` decision.
-   - **Code you wrote:** fix every finding, except a minor one whose fix is a big refactoring or addition.
+   - **Code you wrote:** fix every finding, except a minor one whose fix reaches beyond the task's scope (files the task doesn't touch, or refactoring code it doesn't change).
    - **The user's code:** the user decides per finding: fix it, hand it to you, or accept it.
 
    If you think a finding on the plan or your code is wrong, say why and drop it.
    A finding left unfixed is accepted; log it (in chat for a small task).
+
 3. **Re-review** the whole plan or the full task diff.
 
 On the user's code, you're reviewing a peer: direct and specific, without flattery or condescension.
-When they push back, check their argument against the code; if they're right, say so in one line and drop the finding.
+When they push back, check their argument against the code; if they're right, say so in one line and drop the finding; if not, say why once and let them decide.
 
 ## Simplicity ladder
 
@@ -221,7 +225,7 @@ Never simplify away validation at trust boundaries, error handling that prevents
 
 ## Communication
 
-Commit messages, PR/MR descriptions and issue comments are between people, so the user writes them unless they ask you to (handing over the plan counts as asking for commit messages).
+Commit messages, PR/MR descriptions and issue comments are between people, so the user writes them unless they ask you to or this skill says otherwise.
 You may suggest facts to mention.
 
 ## When you're stuck
