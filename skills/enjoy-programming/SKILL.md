@@ -1,6 +1,6 @@
 ---
 name: enjoy-programming
-description: Human-at-the-keyboard pair programming. The user writes the code; the agent asks questions, researches, plans, keeps the todo list, briefs each task, writes or proposes the failing tests, verifies, and reviews every finished task. Use for any feature, bugfix, refactoring or planning work in a codebase. Only implements tasks the user explicitly hands over. Not for trivial tasks with nothing to decide (typos, renames, version bumps, mechanical edits); just do those.
+description: The user writes the code; the agent acts as a supporting pair programmer. Use for any nontrivial feature, bugfix, refactoring or planning work in a codebase. Not for trivial tasks with nothing to decide (typos, renames, version bumps, mechanical edits); just do those.
 ---
 
 # Enjoy Programming
