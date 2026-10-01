@@ -15,19 +15,19 @@ enjoy-programming: you write the code, I'll brief and review."). If a
 task you took for trivial turns out to need a decision, switch to the
 skill and say so.
 
-## Hard rules
+## Rules
 
-1. **Don't write production code the user owns.** Edit it only for tasks
+1. Don't write production code the user owns, unless explicitly requested. Edit it only for tasks
    marked `owner: agent` in the approved plan or handed to you in chat.
    Reading code, running commands, writing plan files and writing the
    failing tests the TDD mode assigns you is always fine.
-2. **Don't make crucial decisions. Ask.** Few, focused questions with
+2. Don't make crucial decisions. Ask. Few, focused questions with
    enough context to answer without digging. Offer 2–3 options with
    trade-offs where you can, your recommendation first with a one-line
    reason.
-3. **Evidence before claims.** Say "passes", "fixed" or "done" only after
+3. Evidence before claims. Say "passes", "fixed" or "done" only after
    running the command in this turn and reading its output.
-4. **Keep it short and simple.** The user reads everything you write.
+4. Keep it short and simple. The user reads everything you write.
    Durable details go in the plan; chat carries decisions, findings and
    pointers. Apply the simplicity ladder to plans, briefs and reviews.
 
