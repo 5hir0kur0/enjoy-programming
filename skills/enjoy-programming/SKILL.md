@@ -1,6 +1,6 @@
 ---
 name: enjoy-programming
-description: The user writes the code; the agent acts as a supporting pair programmer. Use for any nontrivial feature, bugfix, refactoring or planning work in a codebase. Not for trivial tasks, meaning no behavior change, no new test needed and no design choice (typos, renames, version bumps, mechanical edits); just do those. If any of these fails, use the skill.
+description: The user writes the code; the agent acts as a supporting pair programmer. Use for any nontrivial feature, bugfix, refactoring or planning work in a codebase. Not for trivial tasks, meaning no behavior change, no new test needed and no design choice (typos, renames, version bumps, mechanical edits); just do those.
 ---
 
 # Enjoy Programming
@@ -14,7 +14,7 @@ If a task you took for trivial turns out to need a decision, switch to the skill
 
 ## Rules
 
-1. Write production code _only_ in tasks you own: tasks marked `owner: agent` in the approved plan, tasks handed to you in chat, and all remaining tasks after a handover (see "Handing over the rest of the plan").
+1. Write production code _only_ in tasks you own: tasks marked `owner: agent` in a _planned_ goal, or tasks handed to you in chat for _small_ goals.
    All other production code belongs to the user.
    Reading code, running commands, writing plan files and writing the failing tests the TDD mode assigns you is always fine.
 2. Don't make crucial decisions.
@@ -47,9 +47,9 @@ if it was already started, keep the base commit from its Log line.
   Then write your understanding back, keeping what the user said separate from what you assumed, and name these so the user can change them:
   - The size: **small** (one clear change to existing code) or **planned** (anything bigger, and the default when in doubt).
     A small task has no plan file: the brief (in plan-task format), the base commit and review findings go in chat, with no plan review and no book-keeping.
-  - The TDD mode, ping-pong unless AGENTS.md, CLAUDE.md or the user says otherwise:
-    - **ping-pong:** you write the failing test, the user makes it pass.
-    - **user:** the user writes the tests and the code; you propose the test cases in the brief.
+  - The TDD mode:
+    - **ping-pong:** you write the failing test, the user makes it pass. This is the default mode.
+    - **user:** the user writes the tests and the code; you propose the test cases in the brief. Use this mode only if explicitly requested.
 
 ### 2. Plan (planned size only)
 
@@ -157,6 +157,7 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 4. **Verify.**
    When the user says they're done, run the full test suite plus the project's build, lint and typecheck.
    Report failures by name, including ones you didn't cause.
+   If the verification itself fails (e.g. due to missing tooling), ask the user for guidance.
    Failures the task caused go back to the user (step 3) before the review.
    Pre-existing failures don't block it; if you suspect one, confirm it at the base commit in a separate worktree before saying so.
 5. **Review.**
@@ -170,14 +171,6 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 Run the task loop in the user's seat: you write the test and the code, regardless of the TDD mode, and stay inside the task.
 The user doesn't approve the test; once the review is clean, show them what changed, where, and anything surprising.
 The user commits it.
-
-### Handing over the rest of the plan
-
-If the user hands you the rest of an approved plan (e.g. by saying "Finish the rest of the plan alone."), treat every remaining task as agent-owned.
-Don't start on a dirty working tree (plan file aside).
-Instead of asking, record decisions as `(?)`.
-Skip any task that needs a crucial decision or whose review is stuck, along with every task that depends on it.
-Commit each task yourself after book-keeping, plan file included unless it's gitignored, and end with one line per commit (hash, task, what changed).
 
 ### Bugs
 
@@ -225,7 +218,7 @@ Never simplify away validation at trust boundaries, error handling that prevents
 
 ## Communication
 
-Commit messages, PR/MR descriptions and issue comments are between people, so the user writes them unless they ask you to or this skill says otherwise.
+Commit messages, PR/MR descriptions and issue comments are between people, so the user writes them unless they ask you to.
 You may suggest facts to mention.
 
 ## When you're stuck
