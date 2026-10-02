@@ -160,10 +160,16 @@ Tasks briefed or changed later need no approval: point the user to the entry and
    Don't comment on unfinished code unless they ask or something is seriously wrong.
 4. **Verify.**
    When the user says they're done, run the full test suite plus the project's build, lint and typecheck.
-   Report failures by name, including ones you didn't cause.
-   If the verification itself fails (e.g. due to missing tooling), ask the user for guidance.
-   Failures the task caused go back to the user (step 3) before the review.
-   Pre-existing failures don't block it; if you suspect one, confirm it at the base commit in a separate worktree before saying so.
+   Apply each matching row in order:
+
+| Order | Condition                                                                  | Action                                                                                                                                  |
+| ----- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Any command cannot be executed (missing tool, broken environment)          | Report the exact error and ask the user how to proceed. Verification is blocked; do not claim it succeeded or failed.                   |
+| 2     | Commands ran and reported failures                                         | Report failures by name, including ones unrelated to the task.                                                                          |
+| 3     | A failure is suspected to be pre-existing                                  | Ask the user whether they want you to confirm it at the base commit in a separate worktree. If that verification cannot run, use row 1. |
+| 4     | A failure was caused by this task                                          | Return it to the user (step 3 "The user codes") before review.                                                                          |
+| 5     | All checks pass, or only  failures the user has explicitly accepted remain | Continue to step 5; confirmed pre-existing failures don't block review.                                                                 |
+
 5. **Review.**
    Run the code review (see Review cycle).
 6. **Book-keep.**
