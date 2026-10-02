@@ -142,16 +142,18 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 | 6     | Always                        | Show the user a concise brief in chat: the goal, where to work, and what passing looks like; link the task entry when there is a plan. |
 
 2. **Red.**
-   Get a failing test in place, written by whoever the TDD mode says.
-   Run it: it has to _fail_ because the behavior is missing, not error out from a typo or a missing import.
-   In ping-pong mode the test is the spec for the user's task: if it differs from the brief, get their agreement before they start.
-   - Trivial glue, pure configuration and throwaway code need no test; say so in the brief rather than skipping silently.
-   - Write expected values as literals, not computed by test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`.
-     Such a test shares the code's bugs.
-   - If it passes right away, the test is wrong or the behavior already exists.
-     Find out which; if it exists, tell the user and question the task instead of changing the test.
-   - Don't add test infrastructure (a harness, a framework, a large fixture setup) on your own.
-     If a task needs it, ask; it becomes its own task if the user agrees.
+   Apply each matching row in order:
+
+| Order | Condition                                                                     | Action                                                                                                                                                                                                                                                          |
+| ----- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Trivial glue, pure configuration or throwaway code                            | State in the brief that no test is needed, then go to step 3.                                                                                                                                                                                                   |
+| 2     | Test infrastructure is needed (a harness, a framework, a large fixture setup) | Ask before adding it; it becomes its own task if the user agrees.                                                                                                                                                                                               |
+| 3     | Test is required                                                              | Get a test in place, written by whoever the TDD mode says, and run it. Use literal expected values, not test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`. Repeating the logic shares the code's bugs. |
+| 4     | Test errors out from a typo or missing import                                 | Correct the test setup and rerun; this does not establish Red.                                                                                                                                                                                                  |
+| 5     | Test passes right away                                                        | Determine whether the test is wrong or the behavior already exists. If it exists, tell the user and question the task instead of changing the test.                                                                                                             |
+| 6     | In ping-pong mode, the test expects behavior that differs from the brief      | Explain the difference and ask whether to change the test or the brief; wait for agreement and rerun any changed test.                                                                                                                                          |
+| 7     | Test matches the agreed brief and fails because behavior is missing           | Red is established.                                                                                                                                                                                                                                             |
+
 3. **The user codes.**
    You navigate: answer questions, look things up, run commands.
    When they ask for help, give the smallest useful thing first (a pointer, a hint, an API signature); a snippet only if they ask.
