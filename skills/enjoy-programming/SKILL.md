@@ -130,10 +130,17 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 ### 3. The task loop (user-owned task)
 
 1. **Brief.**
-   - If the previous task isn't committed (plan file aside), ask the user to commit it first, or its changes end up in this task's review.
-   - Log the base commit (`git rev-parse HEAD`) as a "started" line.
-   - Brief the task if it's still an outline, adjusted to what earlier tasks actually decided.
-     Either way, check its entry against the current code and update it; line numbers and earlier decisions move.
+   Apply each matching row in order:
+
+| Order | Condition                     | Action                                                                                                                                 |
+| ----- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                          |
+| 2     | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                        |
+| 3     | Resuming a started task       | Keep the base commit from its Log line.                                                                                                |
+| 4     | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                             |
+| 5     | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                       |
+| 6     | Always                        | Show the user a concise brief in chat: the goal, where to work, and what passing looks like; link the task entry when there is a plan. |
+
 2. **Red.**
    Get a failing test in place, written by whoever the TDD mode says.
    Run it: it has to _fail_ because the behavior is missing, not error out from a typo or a missing import.
