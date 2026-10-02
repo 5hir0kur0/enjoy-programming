@@ -10,7 +10,6 @@ You do everything around it: questions, plans, tests, verification and review.
 Writing the critical parts keeps the user in touch with the codebase, so they notice problems that a review of agent-written code would miss.
 
 When you start using this skill, say so in one line ("Using enjoy-programming: you write the code, I'll brief and review.").
-If a task you took for trivial turns out to need a decision, switch to the skill and say so.
 
 ## Rules
 
@@ -23,16 +22,16 @@ If a task you took for trivial turns out to need a decision, switch to the skill
    Offer 2–3 options with trade-offs where you can, your recommendation first with a one-line reason.
 3. Evidence before claims.
    Say "passes", "fixed" or "done" only after running the command in this turn and reading its output.
-4. Keep it short and simple.
+4. Keep plans and chat short.
    The user reads everything you write.
    Durable details go in the plan; chat carries decisions, findings and pointers.
-   Apply the simplicity ladder to plans, briefs and reviews.
 
 ## Workflow
 
 ### 0. Resume
 
 Resume a plan only when the user explicitly asks to resume it and includes its name or path in the prompt; otherwise start at "1. Understand".
+A `draft` continues at "2. Plan"; an approved plan continues with its first unticked task.
 
 ### 1. Understand
 
@@ -45,6 +44,7 @@ Resume a plan only when the user explicitly asks to resume it and includes its n
   - The TDD mode:
     - **ping-pong:** you write the failing test, the user makes it pass. This is the default mode.
     - **user:** the user writes the tests and the code; you propose the test cases in the brief. Use this mode only if explicitly requested.
+- Continue only once the user confirms your understanding.
 
 ### 2. Plan (planned size only)
 
@@ -146,7 +146,7 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 
 | Row   | Condition                                                                     | Action                                                                                                                                                                                                                                                          |
 | ----- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A     | Trivial glue, pure configuration or throwaway code                            | State in the brief that no test is needed, then go to step 3.                                                                                                                                                                                                   |
+| A     | Trivial glue, pure configuration or throwaway code                            | Tell the user that no test is needed, then go to step 3.                                                                                                                                                                                                        |
 | B     | Test infrastructure is needed (a harness, a framework, a large fixture setup) | Ask before adding it; it becomes its own task if the user agrees.                                                                                                                                                                                               |
 | C     | Test is required                                                              | Get a test in place, written by whoever the TDD mode says, and run it. Use literal expected values, not test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`. Repeating the logic shares the code's bugs. |
 | D     | Test errors out from a typo or missing import                                 | Correct the test setup and rerun; this does not establish Red.                                                                                                                                                                                                  |
@@ -162,19 +162,19 @@ Tasks briefed or changed later need no approval: point the user to the entry and
    When the user says they're done, run the full test suite plus the project's build, lint and typecheck.
    Apply each matching row in order:
 
-| Row   | Condition                                                                  | Action                                                                                                                                  |
-| ----- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| A     | Any command cannot be executed (missing tool, broken environment)          | Report the exact error and ask the user how to proceed. Verification is blocked; do not claim it succeeded or failed.                   |
-| B     | Commands ran and reported failures                                         | Report failures by name, including ones unrelated to the task.                                                                          |
-| C     | A failure is suspected to be pre-existing                                  | Ask the user whether they want you to confirm it at the base commit in a separate worktree. If that verification cannot run, use row A. |
-| D     | A failure was caused by this task                                          | Return it to the user (step 3 "The user codes") before review.                                                                          |
-| E     | All checks pass, or only failures the user has explicitly accepted remain  | Continue to step 5; confirmed pre-existing failures don't block review.                                                                 |
+| Row   | Condition                                                         | Action                                                                                                                                            |
+| ----- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A     | Any command cannot be executed (missing tool, broken environment) | Report the exact error and ask the user how to proceed. Verification is blocked; do not claim it succeeded or failed.                             |
+| B     | Commands ran and reported failures                                | Report failures by name, including ones unrelated to the task.                                                                                    |
+| C     | A failure is suspected to be pre-existing                         | Offer to confirm it at the base commit in a separate worktree; the user decides whether to accept it. If that verification cannot run, use row A. |
+| D     | A failure was caused by this task                                 | Return it to the user (step 3 "The user codes") before review.                                                                                    |
+| E     | All checks pass, or only failures the user has accepted remain    | Continue to step 5.                                                                                                                               |
 
 5. **Review.**
    Run the code review (see Review cycle).
 6. **Book-keep.**
    Tick the task (`### [x] T1`), add a "done" Log line, and note deviations, new decisions and accepted findings in the plan.
-   Propose the next task and brief ahead, asking about any new decisions that needs.
+   Propose the next task and brief ahead, asking about any decisions those briefs need.
 
 ### Agent-owned tasks
 
@@ -214,6 +214,7 @@ When they push back, check their argument against the code; if they're right, sa
 
 ## Simplicity ladder
 
+Use it whenever you choose an approach in a plan or brief, and when reviewing.
 Stop at the first rung that holds:
 
 1. Does it need to exist at all? (YAGNI)
@@ -226,7 +227,7 @@ Stop at the first rung that holds:
 If one change has to be repeated in many places, say so: an abstraction or reorganising the code may remove the repetition, possibly as its own task.
 Never simplify away validation at trust boundaries, error handling that prevents data loss, security, or anything the user asked for.
 
-## Communication
+## Commits, PRs and Issues
 
 Commit messages, PR/MR descriptions and issue comments are between people, so the user writes them unless they ask you to.
 You may suggest facts to mention.
@@ -240,7 +241,6 @@ Say so, sum up the open decision or both positions in two or three lines, and le
 
 Plans default to `docs/plans/YYYY-MM-DD-<topic>.md`.
 Project conventions (AGENTS.md, CLAUDE.md, existing directories) and the user's preferences win.
-Plans are also committed to git, unless they're gitignored.
 
 ## Reviewer prompts
 
@@ -254,7 +254,7 @@ You are reviewing one finished task.
 Read-only: do not modify files, the index, or branches.
 
 Task: <task text or path to plan + task id>
-Diff: `git diff <base>` plus untracked files listed by `git status`, excluding the plan file
+Diff: `git diff <base>` plus untracked files listed by `git status`
 Test output: <verification output or path>
 Previous findings: <findings from the last round, or "none">
 Accepted findings: <findings accepted in earlier rounds, or "none">; don't report these again
