@@ -132,27 +132,27 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 1. **Brief.**
    Apply each matching row in order:
 
-| Order | Condition                     | Action                                                                                                                                 |
+| Row   | Condition                     | Action                                                                                                                                 |
 | ----- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                          |
-| 2     | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                        |
-| 3     | Resuming a started task       | Keep the base commit from its Log line.                                                                                                |
-| 4     | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                             |
-| 5     | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                       |
-| 6     | Always                        | Show the user a concise brief in chat: the goal, where to work, and what passing looks like; link the task entry when there is a plan. |
+| A     | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                          |
+| B     | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                        |
+| C     | Resuming a started task       | Keep the base commit from its Log line.                                                                                                |
+| D     | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                             |
+| E     | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                       |
+| F     | Always                        | Show the user a concise brief in chat: the goal, where to work, and what passing looks like; link the task entry when there is a plan. |
 
 2. **Red.**
    Apply each matching row in order:
 
-| Order | Condition                                                                     | Action                                                                                                                                                                                                                                                          |
+| Row   | Condition                                                                     | Action                                                                                                                                                                                                                                                          |
 | ----- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | Trivial glue, pure configuration or throwaway code                            | State in the brief that no test is needed, then go to step 3.                                                                                                                                                                                                   |
-| 2     | Test infrastructure is needed (a harness, a framework, a large fixture setup) | Ask before adding it; it becomes its own task if the user agrees.                                                                                                                                                                                               |
-| 3     | Test is required                                                              | Get a test in place, written by whoever the TDD mode says, and run it. Use literal expected values, not test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`. Repeating the logic shares the code's bugs. |
-| 4     | Test errors out from a typo or missing import                                 | Correct the test setup and rerun; this does not establish Red.                                                                                                                                                                                                  |
-| 5     | Test passes right away                                                        | Determine whether the test is wrong or the behavior already exists. If it exists, tell the user and question the task instead of changing the test.                                                                                                             |
-| 6     | In ping-pong mode, the test expects behavior that differs from the brief      | Explain the difference and ask whether to change the test or the brief; wait for agreement and rerun any changed test.                                                                                                                                          |
-| 7     | Test matches the agreed brief and fails because behavior is missing           | Red is established.                                                                                                                                                                                                                                             |
+| A     | Trivial glue, pure configuration or throwaway code                            | State in the brief that no test is needed, then go to step 3.                                                                                                                                                                                                   |
+| B     | Test infrastructure is needed (a harness, a framework, a large fixture setup) | Ask before adding it; it becomes its own task if the user agrees.                                                                                                                                                                                               |
+| C     | Test is required                                                              | Get a test in place, written by whoever the TDD mode says, and run it. Use literal expected values, not test code that repeats the logic under test: `parse_duration("1h30m") == 5400`, not `== to_seconds(1, 30)`. Repeating the logic shares the code's bugs. |
+| D     | Test errors out from a typo or missing import                                 | Correct the test setup and rerun; this does not establish Red.                                                                                                                                                                                                  |
+| E     | Test passes right away                                                        | Determine whether the test is wrong or the behavior already exists. If it exists, tell the user and question the task instead of changing the test.                                                                                                             |
+| F     | In ping-pong mode, the test expects behavior that differs from the brief      | Explain the difference and ask whether to change the test or the brief; wait for agreement and rerun any changed test.                                                                                                                                          |
+| G     | Test matches the agreed brief and fails because behavior is missing           | Red is established.                                                                                                                                                                                                                                             |
 
 3. **The user codes.**
    You navigate: answer questions, look things up, run commands.
@@ -162,13 +162,13 @@ Tasks briefed or changed later need no approval: point the user to the entry and
    When the user says they're done, run the full test suite plus the project's build, lint and typecheck.
    Apply each matching row in order:
 
-| Order | Condition                                                                  | Action                                                                                                                                  |
+| Row   | Condition                                                                  | Action                                                                                                                                  |
 | ----- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | Any command cannot be executed (missing tool, broken environment)          | Report the exact error and ask the user how to proceed. Verification is blocked; do not claim it succeeded or failed.                   |
-| 2     | Commands ran and reported failures                                         | Report failures by name, including ones unrelated to the task.                                                                          |
-| 3     | A failure is suspected to be pre-existing                                  | Ask the user whether they want you to confirm it at the base commit in a separate worktree. If that verification cannot run, use row 1. |
-| 4     | A failure was caused by this task                                          | Return it to the user (step 3 "The user codes") before review.                                                                          |
-| 5     | All checks pass, or only  failures the user has explicitly accepted remain | Continue to step 5; confirmed pre-existing failures don't block review.                                                                 |
+| A     | Any command cannot be executed (missing tool, broken environment)          | Report the exact error and ask the user how to proceed. Verification is blocked; do not claim it succeeded or failed.                   |
+| B     | Commands ran and reported failures                                         | Report failures by name, including ones unrelated to the task.                                                                          |
+| C     | A failure is suspected to be pre-existing                                  | Ask the user whether they want you to confirm it at the base commit in a separate worktree. If that verification cannot run, use row A. |
+| D     | A failure was caused by this task                                          | Return it to the user (step 3 "The user codes") before review.                                                                          |
+| E     | All checks pass, or only failures the user has explicitly accepted remain  | Continue to step 5; confirmed pre-existing failures don't block review.                                                                 |
 
 5. **Review.**
    Run the code review (see Review cycle).
