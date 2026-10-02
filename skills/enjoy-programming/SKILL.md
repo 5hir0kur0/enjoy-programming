@@ -32,12 +32,7 @@ If a task you took for trivial turns out to need a decision, switch to the skill
 
 ### 0. Resume
 
-Look for a plan that matches the request and is a `draft` or has unticked tasks.
-None: start at "1. Understand".
-Several, or unsure whether one matches: show the candidates and ask.
-A `draft` continues at "2. Plan".
-Otherwise read its Log and Open questions and continue with the first unticked task;
-if it was already started, keep the base commit from its Log line.
+Resume a plan only when the user explicitly asks to resume it and includes its name or path in the prompt; otherwise start at "1. Understand".
 
 ### 1. Understand
 
