@@ -22,9 +22,11 @@ When you start using this skill, say so in one line ("Using enjoy-programming: y
    Offer 2–3 options with trade-offs where you can, your recommendation first with a one-line reason.
 - R3. Evidence before claims.
    Say "passes", "fixed" or "done" only after running the command in this turn and reading its output.
-- R4. Keep plans and chat short.
+- R4. Keep plans and chat as short as possible without sacrificing accuracy.
    The user reads everything you write.
-   Durable details go in the plan; chat carries decisions, findings and pointers.
+   - In planned goals: Durable details go in the plan; chat carries decisions, findings and pointers.
+   - Bold only what the user must act on, so messages are easy to skim.
+   - For any reply longer than a few lines, draft it in your reasoning first, then cut it against these rules before sending.
 
 ## Workflow
 
