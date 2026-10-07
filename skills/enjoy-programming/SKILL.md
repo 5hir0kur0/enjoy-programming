@@ -39,8 +39,8 @@ A `draft` continues at "W2. Plan"; an approved plan continues with its first unt
 - Link every source you rely on and mark what you couldn't verify.
 - Ask until you can state the goal, the constraints and what "done" looks like.
   Then write your understanding back, keeping what the user said separate from what you assumed, and name these so the user can change them:
-  - The size: **small** (one clear change to existing code) or **planned** (anything bigger, and the default when in doubt).
-    A small task has no plan file: the brief (in plan-task format), the base commit and review findings go in chat, with no plan review and no book-keeping.
+  - The size of the goal: **small** (one clear change to existing code) or **planned** (anything bigger, and the default when in doubt).
+    A small goal is a single task without a plan file: its brief (in the plan's task format), the base commit and review findings go in chat, with no plan review and no book-keeping.
   - The TDD mode:
     - **ping-pong:** you write the failing test, the user makes it pass. This is the default mode.
     - **user:** the user writes the tests and the code; you propose the test cases in the brief. Use this mode only if explicitly requested.
@@ -76,7 +76,7 @@ One to three sentences: what, why, and how we know it's done.
 
 ### [ ] T1: <title> · owner: user
 
-- **Goal:** <one sentence>
+- **Outcome:** <one sentence>
 - **Where:** `src/config.rs:120` (`parse_config`); new `fn validate_key(s: &str) -> Result<Key, ConfigError>` in `src/config/key.rs`
 - **Test first:** `tests/config.rs`, `rejects_empty_key`: `parse_config("") == Err(ConfigError::EmptyKey)`
 - **Pitfalls:** `parse_config` is also called from `src/cli.rs:40` with pre-trimmed input
@@ -89,7 +89,7 @@ One to three sentences: what, why, and how we know it's done.
 
 ### [ ] T3: <title> · owner: user · outline
 
-- **Goal:** <one sentence>
+- **Outcome:** <one sentence>
 - **Depends on:** Q1, whatever T2 decides about <thing>
 
 ## Open questions
@@ -132,14 +132,14 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 - L1. **Brief.**
    Apply each matching row in order:
 
-| Row   | Condition                     | Action                                                                                                                                 |
-| ----- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| L1a   | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                          |
-| L1b   | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                        |
-| L1c   | Resuming a started task       | Keep the base commit from its Log line.                                                                                                |
-| L1d   | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                             |
-| L1e   | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                       |
-| L1f   | Always                        | Show the user a concise brief in chat: the goal, where to work, and what passing looks like; link the task entry when there is a plan. |
+| Row   | Condition                     | Action                                                                                                                                    |
+| ----- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| L1a   | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                             |
+| L1b   | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                           |
+| L1c   | Resuming a started task       | Keep the base commit from its Log line.                                                                                                   |
+| L1d   | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                                |
+| L1e   | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                          |
+| L1f   | Always                        | Show the user a concise brief in chat: the outcome, where to work, and what passing looks like; link the task entry when there is a plan. |
 
 - L2. **Red.**
    Apply each matching row in order:
@@ -205,7 +205,7 @@ If not, re-read the inputs from scratch and ignore what you remember about the i
    - **The user's code:** the user decides per finding: fix it, hand it to you, or accept it.
 
    If you think a finding on the plan or your code is wrong, say why and drop it.
-   A finding left unfixed is accepted; log it (in chat for a small task).
+   A finding left unfixed is accepted; log it (in chat for a small goal).
 
 - RC3. **Re-review** the whole plan or the full task diff.
 
@@ -301,7 +301,7 @@ Check:
 - Hidden decisions: does the plan decide something the user never decided?
   Is every assumption marked (?)?
 - Emptiness: in briefed tasks, placeholders that decide nothing ("TBD", "handle edge cases", "add validation", "write tests"), or no test and no stated reason for skipping it.
-  Outline tasks only need a title, an owner, a goal and what they wait on; flag an outline that makes a decision.
+  Outline tasks only need a title, an owner, an outcome and what they wait on; flag an outline that makes a decision.
 - Code: full implementations in any task.
   Short pseudo-code is fine.
 - Simplicity: a simpler approach, or unnecessary abstractions or dependencies?
