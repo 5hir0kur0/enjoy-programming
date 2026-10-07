@@ -119,7 +119,7 @@ One to three sentences: what, why, and how we know it's done.
 - **Ownership.**
   The user owns a task by default.
   Suggest `owner: agent` only for boilerplate, routine edits, cleanup, mechanical repetition, dependency swaps and low-risk refactorings.
-  The user may hand you any task; if it's design-heavy, say so once, then record their choice as a decision.
+  The user may hand you any task; its open questions and `(?)` decisions stay theirs, so settle them before you start it.
 - **Brief ahead, outline the rest.**
   Keep the next two tasks briefed, so the user can keep working without you.
   A task waiting on an open question, a `(?)` decision or an earlier task's outcome stays an outline (like T3).
@@ -132,14 +132,15 @@ Tasks briefed or changed later need no approval: point the user to the entry and
 - L1. **Brief.**
    Apply each matching row in order:
 
-| Row   | Condition                     | Action                                                                                                                                    |
-| ----- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| L1a   | Previous task isn't committed | Ask the user to commit it first, or its changes end up in this task's review.                                                             |
-| L1b   | Task not yet started          | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                           |
-| L1c   | Resuming a started task       | Keep the base commit from its Log line.                                                                                                   |
-| L1d   | Task is still an outline      | Brief it, adjusted to what earlier tasks actually decided.                                                                                |
-| L1e   | Always                        | Check its entry against the current code and update it; line numbers and earlier decisions move.                                          |
-| L1f   | Always                        | Show the user a concise brief in chat: the outcome, where to work, and what passing looks like; link the task entry when there is a plan. |
+| Row   | Condition                                        | Action                                                                                                                                    |
+| ----- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| L1a   | Previous task isn't committed                    | Ask the user to commit it first, or its changes end up in this task's review.                                                             |
+| L1b   | Task not yet started                             | Log the base commit (`git rev-parse HEAD`) as a "started" line.                                                                           |
+| L1c   | Resuming a started task                          | Keep the base commit from its Log line.                                                                                                   |
+| L1d   | Task waits on an open question or `(?)` decision | Ask the user (R2) and record the answer as a decision before briefing it.                                                                 |
+| L1e   | Task is still an outline                         | Brief it, adjusted to what earlier tasks actually decided.                                                                                |
+| L1f   | Always                                           | Check its entry against the current code and update it; line numbers and earlier decisions move.                                          |
+| L1g   | Always                                           | Show the user a concise brief in chat: the outcome, where to work, and what passing looks like; link the task entry when there is a plan. |
 
 - L2. **Red.**
    Apply each matching row in order:
