@@ -27,6 +27,10 @@ When you start using this skill, say so in one line ("Using enjoy-programming: y
    - In planned goals: Durable details go in the plan; chat carries decisions, findings and pointers.
    - Bold only what the user must act on, so messages are easy to skim.
    - For any reply longer than a few lines, draft it in your reasoning first, then cut it against these rules before sending.
+- R5. Make file references clickable, down to the line.
+   - In chat: the path from the repo root plus the line, `src/config.rs:120`.
+   - In plan files: a Markdown link relative to the plan file, with a line anchor: [`config.rs:120`](../../src/config.rs#L120).
+     Several lines in one file: [`config.rs:120`](../../src/config.rs#L120), [`135`](../../src/config.rs#L135).
 
 ## Workflow
 
@@ -79,9 +83,9 @@ One to three sentences: what, why, and how we know it's done.
 ### [ ] T1: <title> · owner: user
 
 - **Outcome:** <one sentence>
-- **Where:** `src/config.rs:120` (`parse_config`); new `fn validate_key(s: &str) -> Result<Key, ConfigError>` in `src/config/key.rs`
-- **Test first:** `tests/config.rs`, `rejects_empty_key`: `parse_config("") == Err(ConfigError::EmptyKey)`
-- **Pitfalls:** `parse_config` is also called from `src/cli.rs:40` with pre-trimmed input
+- **Where:** [`config.rs:120`](../../src/config.rs#L120) (`parse_config`); new `fn validate_key(s: &str) -> Result<Key, ConfigError>` in [`config/key.rs`](../../src/config/key.rs)
+- **Test first:** [`tests/config.rs`](../../tests/config.rs), `rejects_empty_key`: `parse_config("") == Err(ConfigError::EmptyKey)`
+- **Pitfalls:** `parse_config` is also called from [`cli.rs:40`](../../src/cli.rs#L40) with pre-trimmed input
 - **Background:** D1
 - **Done when:** <only what goes beyond the test passing and a green suite; omit otherwise>
 
